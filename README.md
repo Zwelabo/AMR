@@ -12,7 +12,7 @@ The Antimicrobial Resistance (AMR), Antimicrobial Consumption (AMC), and Antimic
 - [Online AMR Data Source](#Online_data)
   
 ### Our World in Data: AMR Surveillance Systems Map Automation
-This section contains an R script (`amr_map.R`) that automates the process of downloading, processing, and visualizing data on Antimicrobial Resistance (AMR) surveillance systems in FF Supported countries. The script generates an interactive Shiny app with a map visualization.
+This section contains an R script (`oneworld.R`) that automates the process of downloading, processing, and visualizing data on Antimicrobial Resistance (AMR) surveillance systems in FF Supported countries. The script generates an interactive Shiny app with a map visualization.
 
 #### Overview
 The script performs the following steps:
