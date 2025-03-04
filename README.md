@@ -10,3 +10,24 @@ The Antimicrobial Resistance (AMR), Antimicrobial Consumption (AMC), and Antimic
 - [AMR/U/C Data Archive and Protection](#data_archive)
 - [Data Presentation](#data_presentation)
 - [Online AMR Data Source](#Online_data)
+  
+### Our World in Data: AMR Surveillance Systems Map Automation
+This section contains an R script (`amr_map.R`) that automates the process of downloading, processing, and visualizing data on Antimicrobial Resistance (AMR) surveillance systems in African countries. The script generates an interactive Shiny app with a map visualization.
+
+#### Overview
+The script performs the following steps:
+1. **Downloads Data**: Fetches the latest AMR surveillance data from [Our World in Data](https://ourworldindata.org).
+2. **Processes Data**: Cleans and prepares the data for visualization.
+3. **Generates Map**: Creates an interactive map using `ggplot2` and `plotly`.
+4. **Runs Shiny App**: Launches a Shiny app with a dropdown to filter the map by FF status.
+
+#### How to Use
+
+##### Prerequisites
+- R (version 4.0 or higher)
+- Required R packages: `ggplot2`, `maps`, `mapdata`, `sf`, `plotly`, `shiny`, `dplyr`
+
+##### Running the Script
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git
