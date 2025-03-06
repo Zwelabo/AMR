@@ -9,7 +9,7 @@ The Antimicrobial Resistance (AMR), Antimicrobial Consumption (AMC), and Antimic
 - [AMU Data Analysis Plan](#amu_analysis)
 - [AMR/U/C Data Archive and Protection](#data_archive)
 - [Data Presentation](#data_presentation)
-- [Online AMR Data Source](#Online_data)
+- [Online AMR Data Sources](#Online_data)
   
 ### Our World in Data: AMR Surveillance Systems Map Automation
 This section contains an R script ([oneworld.R](https://github.com/ASLM-Fabebe/MAAP-Data-Analysis/blob/main/oneworld.R)) that automates the process of downloading, processing, and visualizing data on Antimicrobial Resistance (AMR) surveillance systems in FF Supported countries. The script generates an interactive Shiny app with a map visualization.
