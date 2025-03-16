@@ -17,10 +17,6 @@ amr <- readxl::read_excel("test-data/AMR data set.xlsx") %>%
   dplyr::mutate(rid=row_number()) # assign distinct RIDs
 
 
-names(amr)[1:32]
-amr[,names(amr)[82:96]]
-
-
 # Specify mandatory columns i.e. columns that should not be NULL/NA
 man_cols = c("Specimen date", # data specimen collected
              "Specimen type" , # type of specimemn
@@ -60,12 +56,6 @@ lkp_specimens <-  amr %>%
   dplyr::select(any_of(specimen_vec))
 
 # get test results
-
-# pos_drugs <- c(33:81) # drugs
-# abx_vec <- names(amr)[c(33:81)]
-# pos_vec <- which(names(amr) %in% c("rid","Identification number","Organism","Specimen type"))
-# amr_res <- amr[,names(amr)[c(pos_vec,pos_drugs)]]
-
 drugs_vec <- c("AMK_ND30","AMP_ND10", "AZM_ND15", "FEP_ND30", "CFM_ND5",
                "CTX_ND30","FOX_ND30", "CAZ_ND30", "CRO_ND30", "CIP_ND5",
                "COL_ND10","DOR_ND10", "ETP_ND10", "GEN_ND10", "IPM_ND10",
@@ -76,10 +66,11 @@ drugs_vec <- c("AMK_ND30","AMP_ND10", "AZM_ND15", "FEP_ND30", "CFM_ND5",
                "MNO_NM","OXA_NM","PEN_NM","SPT_NM","TGC_NM","SXT_NM","CTX_NE",
                "CRO_NE","PEN_NE")
 
-
+# map antibiotics
 abx_conformed <- as.ab(drugs_vec)
 
 
+# get antimicrobial results
 main_vars <- c("rid","Identification number","Organism","Specimen type")
 amr_res <- amr %>%
   dplyr::select(any_of(c(main_vars,drugs_vec)))
@@ -131,7 +122,7 @@ famr_long <- amr_res %>%
 
 
 
-# separate breakpoints from SIR interpretations
+# separate breakpoints and SIR interpretations
 
 # Drugs with SIR interpretations already
 famr_long_sir <- famr_long %>%
