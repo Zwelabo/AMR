@@ -1,3 +1,23 @@
+
+# Introduction ------------------------------------------------------------
+
+# These scripts have been developed to simplify and standardize AMR/C/U data analysis
+# through ASLM as part of the MAAP Phase II project funded through Fleming Fund.
+
+# These scripts are largely based on the free and open-source AMR package implemented in R.
+
+
+
+# Set-up and software installation ----------------------------------------
+
+# First, you will need to download and install the R software and the latest free version
+# of RStudio. To install R, navidate to [cran.r-project.org](https://cran.r-project.org/bin/windows/base/), and
+# if you are on a Windows machine, click Download R-4.4.3 for Windows. This will download the installer to your Downloads foler.
+# Once the download has been completed, click the installer to install R on your computer and follow the prompts without making any changes.
+# Next, install RStudio by navigating to the [RStudio-desktop download page](https://posit.co/download/rstudio-desktop/).
+# Click the blue tab under **2: Install RStudio** and click the installer to begin the installation once the downloda has completed.
+
+
 # Load packages -----------------------------------------------------------
 
 source(file.path("scripts","install_packages_packman.R"))
