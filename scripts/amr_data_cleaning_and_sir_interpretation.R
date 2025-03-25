@@ -28,9 +28,10 @@
 # 4. Click MAAP-Data-Analysis.Rproj
 # This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
 
+
 # Load packages -----------------------------------------------------------
-
-
+# 1. Within RStudio in the bottom right pane, click on Files -> scripts folder -> install_packages_pacman.R (This will open the script in the top-right pane)
+# 2. Select all (Ctrl-A) and click Run (This will install all the requisite packages and prepare your environment for the analysis)
 
 source(file.path("scripts","install_packages_packman.R"))
 
