@@ -29,11 +29,32 @@
 # This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
 
 
-# Load packages -----------------------------------------------------------
+
+# Load packages
 # 1. Within RStudio in the bottom right pane, click on Files -> scripts folder -> install_packages_pacman.R (This will open the script in the top-right pane)
 # 2. Select all (Ctrl-A) and click Run (This will install all the requisite packages and prepare your environment for the analysis)
 
+# Alternatively click the main analysis script (In the bottom-right pane, click Files -> scripts folder -> amr_data_cleaning_and_sir_interpretation.R)
+# and Run the first line under "Load packages"
+
+# Input Data
+# 1. Add your input data to the test-data folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR"
+# as its prefix
+# 2. Now you can attempt to run the analysis script
+# 3. If everything runs successfully you should have 3 look-up tables (metadata files) and the test result file (interpretated AST results), with AST interpretations, in the Results folder.
+
+# Load packages -----------------------------------------------------------
 source(file.path("scripts","install_packages_packman.R"))
+
+
+
+# Create results folder and set the date ----------------------------------
+
+res_dir <- file.path("Results")
+
+if (!dir.exists(res_dir)){
+  dir.create(res_dir, recursive = T)
+}
 
 
 date_var <- as.Date(date(), format = "%a %b %d %H:%M:%S %Y")
@@ -46,7 +67,9 @@ source(file.path("functions","amr_analysis_functions_01.R"))
 
 
 # Load data sources and preprocess to remove NAs ---------------------------
-amr <- readxl::read_excel("test-data/AMR data set.xlsx") %>%
+input_file <- list.files("test-data", pattern = "^AMR.*.xlsx")
+
+amr <- readxl::read_excel(file.path("test-data",input_file)) %>%
   dplyr::mutate(rid=row_number()) # assign distinct RIDs
 
 
@@ -225,7 +248,14 @@ instrinsic_res_status_df_wide # intrinsic_res_status results
 
 
 
+# Write data to file ------------------------------------------------------
 
+library(openxlsx)
+openxlsx::write.xlsx(lkp_organisms,file = file.path("Results",paste0("Organisms.",date_var,".xlsx")))
+openxlsx::write.xlsx(lkp_demographics,file = file.path("Results",paste0("Demographics.",date_var,".xlsx")))
+openxlsx::write.xlsx(lkp_facility,file = file.path("Results",paste0("Facilities.",date_var,".xlsx")))
+openxlsx::write.xlsx(sir_outcomes_df_wide,file = file.path("Results",paste0("AST.results.",date_var,".xlsx")))
+openxlsx::write.xlsx(instrinsic_res_status_df_wide,file = file.path("Results",paste0("Intrinsic.results.",date_var,".xlsx")))
 
 
 # End ---------------------------------------------------------------------
