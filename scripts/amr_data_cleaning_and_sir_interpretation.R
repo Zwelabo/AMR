@@ -18,7 +18,19 @@
 # Click the blue tab under **2: Install RStudio** and click the installer to begin the installation once the downloda has completed.
 
 
+
+
+# Clone the Country-specific MAAP Data Analysis repository from GitHub ----
+# 1. Download GitHUb Desktop from the following link: (GitHub-Desktop download page)[https://desktop.github.com/download/], by clicking the **Download for Windows** tab.
+# Follow the installation instructions and open the application once installation has completed successfully.
+# 2. Go to File -> Clone repository -> URL and then paste the follwoing link https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git in the first box and click Clone
+# 3. In RStudio go to File -> New Project -> Existing Project -> Browse (Navigate to your Documents -> GitHub -> MAAP-Data-Analysis)
+# 4. Click MAAP-Data-Analysis.Rproj
+# This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
+
 # Load packages -----------------------------------------------------------
+
+
 
 source(file.path("scripts","install_packages_packman.R"))
 
