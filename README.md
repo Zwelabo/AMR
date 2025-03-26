@@ -3,7 +3,7 @@
 
 ## Introduction
 
-These scripts have been developed to simplify and standardize AMR/C/U data analysis through ASLM as part of the MAAP Phase II project funded through Fleming Fund. These scripts are largely based on the free and open-source AMR package implemented in R.
+These scripts have been developed to simplify and standardize AMR/C/U data analysis through ASLM as part of the MAAP Phase II project funded through Fleming Fund. These scripts are largely based on the free and open-source [AMR package](https://msberends.github.io/AMR/index.html) implemented in R.
 
 ## Set-up and software installation 
 
