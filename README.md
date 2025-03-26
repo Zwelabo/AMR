@@ -13,7 +13,7 @@ First, you will need to download and install the R software and the latest free 
 2.  If you are on a Windows machine, click Download R-4.4.3 for Windows. This will download the installer to your Downloads folder.
 3.  Once the download has been completed, click the installer to install R on your computer and follow the prompts without making any changes.
 
-Next, install RStudio by navigating to the \[RStudio desktop download page\](https://posit.co/download/rstudio-desktop/). Click the blue tab under Install RStudio and click the installer to begin the installation once the download has completed.
+Next, install RStudio by navigating to the [RStudio desktop download page](https://posit.co/download/rstudio-desktop/). Click the blue tab under Install RStudio and click the installer to begin the installation once the download has completed.
 
 ## Running Code
 
