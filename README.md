@@ -49,21 +49,14 @@ Alternatively;
 
 -    Now you can attempt to run the analysis script.
 
--   If everything runs successfully,
+-   If everything runs successfully, you should have the following in the results folder:
+      - 3  look-up tables (metadata files)
+      - The test result file (interpreted AST results), with AST interpretations
+      - An antibiogram of the tested bug-drug combinations
+      - CSV files of E. coli resistance distribution by Age, gender, and specimen type
 
-    You should have the following in the results folder:
-
-    3 look-up tables (metadata files)
-
-    The test result file (interpreted AST results), with AST interpretations.
-
-    An antibiogram of the tested bug-drug combinations
-
-    csv files of E. coli resistance distribution by Age, gender, and specimen type
-
--   In the plots folder;
-
-    Barplots of the resistance prevalence of E. coli
+-   In the plots folder:
+      - Barplots of the resistance prevalence of E. coli
 
     *Please note that only E. coli output is currently shown but resistance to all other pathogens can be obtained by substituting accordingly*.
 
