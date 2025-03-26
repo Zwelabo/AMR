@@ -9,7 +9,7 @@ These scripts have been developed to simplify and standardize AMR/C/U data analy
 
 First, you will need to download and install the R software and the latest free version of RStudio. To install R;
 
-1.  Navigate to \[cran.r-project.org\](https://cran.r-project.org/bin/windows/base/), and
+1.  Navigate to [cran.r-project.org](https://cran.r-project.org/bin/windows/base/), and
 2.  If you are on a Windows machine, click Download R-4.4.3 for Windows. This will download the installer to your Downloads folder.
 3.  Once the download has been completed, click the installer to install R on your computer and follow the prompts without making any changes.
 
@@ -19,7 +19,7 @@ Next, install RStudio by navigating to the [RStudio desktop download page](https
 
 Clone the Country-specific MAAP Data Analysis repository from GitHub
 
-1.  Download GitHUb Desktop from the following link: (GitHub-Desktop download page)\[https://desktop.github.com/download/\], by clicking the **Download for Windows** tab.
+1.  Download GitHUb Desktop from the following link: (GitHub-Desktop download page)[https://desktop.github.com/download/], by clicking the **Download for Windows** tab.
 
     Follow the installation instructions and open the application once installation has completed successfully.
 
