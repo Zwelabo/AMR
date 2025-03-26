@@ -60,7 +60,7 @@ Alternatively;
 
     *Please note that only E. coli output is currently shown but resistance to all other pathogens can be obtained by substituting accordingly*.
 
-    ### Loading Packages
+### Loading Packages
 
 ```{r}
 source(file.path("scripts","install_packages_packman.R"))
