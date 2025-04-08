@@ -9,7 +9,7 @@ editor: visual
 
 These scripts have been developed to simplify and standardize AMR/C/U data analysis through ASLM as part of the MAAP Phase II project funded through Fleming Fund. These scripts are largely based on the free and open-source AMR package implemented in R.
 
-## Set-up and software installation 
+## Set-up and software installation
 
 First, you will need to download and install the R software and the latest free version of RStudio. To install R;
 
@@ -27,7 +27,7 @@ Clone the Country-specific MAAP Data Analysis repository from GitHub
 
     Follow the installation instructions and open the application once installation has completed successfully.
 
-2.   Go to File -\> Clone repository -\> URL and then paste the following link https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git in the first box and
+2.  Go to File -\> Clone repository -\> URL and then paste the following link https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git in the first box and
 
 3.  Click Clone
 
@@ -51,7 +51,7 @@ Alternatively;
 
 -   Add your input data to the test-data folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
 
--    Now you can attempt to run the analysis script.
+-   Now you can attempt to run the analysis script.
 
 -   If everything runs successfully,
 
@@ -91,7 +91,7 @@ if (!dir.exists(res_dir)){
 date_var <- as.Date(date(), format = "%a %b %d %H:%M:%S %Y")
 ```
 
-### Load functions 
+### Load functions
 
 ```{r}
 source(file.path("functions","amr_analysis_functions_01.R"))
@@ -123,7 +123,7 @@ amr <- amr %>%
   filter(if_all(all_of(man_cols), ~ !is.na(.)))
 ```
 
-### Split demographics and results 
+### Split demographics and results
 
 ```{r}
 # get demographics

@@ -287,9 +287,133 @@ org_name='Escherichia coli',
 abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
 )
 
-#other bug-drug combinations to follow
+
+#Klebsiella pneumoniae
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Klebsiella pneumoniae',
+  abs_ref <- c('AMC', 'CXM', 'CTX', 'CRO', 'CAZ', 'CIP', 'GEN', 'TOB', 'TMP', 'SXT', 'MEM', 'TZP', 'TMP', 'LVX', 'ERY')
+)
+
+
+
+#S. aureus
+#MRSA to follow
+
+##
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name="Staphylococcus aureus",
+  abs_ref <- c('FOX', 'CLI', 'ERY', 'GEN', 'TOB', 'FUS', 'LNZ', 'RIF', 'TMP')
+  )
+
+
+
+#Proteus mirabilis
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Proteus mirabilis',
+  abs_ref <- c('AMX', 'AMP', 'AMC', 'CXM', 'CTX', 'CRO', 'CAZ', 'CIP', 'GEN', 'TOB', 'TMP', 'SXT')
+)
+
+
+
+#P. aeruginosa
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Pseudomonas aeruginosa',
+  abs_ref <- c('TZP', 'CAZ', 'MEM', 'IPM', 'CIP', 'TOB')
+)
+
+
+
+
+#S. pneumoniae
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Streptococcus pneumoniae',
+  abs_ref <- c('PEN', 'CIP', 'PHN', 'TCY', 'SXT')
+)
+
+
+#S. pyogenes
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Streptococcus pyogenes',
+  abs_ref <- c('PEN', 'CLI', 'TCY', 'SXT', 'ERY')
+)
+
+#Enterococcus faecalis/ faecium
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Enterococcus faecalis',
+  abs_ref <- c('AMP', 'GEN', 'LNZ', 'TZP', 'VAN')
+)
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Enterococcus faecium',
+  abs_ref <- c('AMP', 'GEN', 'LNZ', 'TZP', 'VAN')
+)
+
+
+
+#Haemophilus influenzae
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Haemophilus influenzae',
+  abs_ref <- c('AMP', 'AMX', 'AMC', 'CTX', 'PEN', 'TCY', 'TMP', 'CIP')
+)
+
+
+#Acinetobacter spp
+
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Acinetobacter baumannii',
+  abs_ref <- c('MEM', 'CIP', 'TMP' ,'GEN', 'TOB', 'AMK')
+)
+
+
+
+#Neisseria gonorrhoeae
+
+amr_grp1_analysis(
+  cntry = cntry,
+  par=par,
+  par_var_name=par_var_name,
+  org_name='Neisseria gonorrhoeae',
+  abs_ref <- c('CFM', 'CRO', 'AZM', 'CIP', 'SPT')
+)
+
 
 }
+
 
 
 #antibiogram
@@ -298,6 +422,7 @@ abg_df <- an_df %>%
   mutate_if(is_sir_eligible, as.sir) %>%
   antibiogram()
 
+#other bug-drug classes
 
 # End ---------------------------------------------------------------------
 
