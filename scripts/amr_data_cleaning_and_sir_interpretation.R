@@ -48,6 +48,7 @@ source(file.path("scripts","install_packages_packman.R"))
 
 
 
+
 # Create results folder and set the date ----------------------------------
 
 res_dir <- file.path("Results")
@@ -239,14 +240,12 @@ sir_outcomes_df_wide <- sir_outcomes_df %>%
 # Start downstream analysis -----------------------------------------------
 
 # Look-up tables
-lkp_specimens
-lkp_demographics
-lkp_facility
+#lkp_specimens
+#lkp_demographics
+#lkp_facility
 
 # Results tables
-sir_outcomes_df_wide          # Antimicrobial results (SIR Interpretations)
-
-
+# Antimicrobial results (SIR Interpretations)
 
 an_df <- sir_outcomes_df_wide %>%
   left_join(lkp_demographics %>% select(Age, Sex,rid), by='rid') %>%
@@ -263,166 +262,18 @@ an_df <- sir_outcomes_df_wide %>%
          Age_g=ifelse(Age_g=='0', '<1',Age_g),
          Age_g=factor(Age_g, levels=c('<1','1-4','5-19', '20-49','50-64','65+')))
 
+ab_cols <- unique(sir_outcomes_df$ab)  #antibiotic columns
 
-#aNALYSIS BY PATHOGEN
+ab_class_list <- read.csv('test-data/ab_class_list.csv')
 
-
-par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_type')) %>%
-  mutate(id=paste0(param,var_name))
-cntry='TZ'
-
-
-for (i in par_df$id) {
-
-  par=par_df$param[par_df$id==i]
-  par_var_name=par_df$var_name[par_df$id==i]
+an_df_long <- an_df %>%
+  pivot_longer(cols=ab_cols, names_to = 'ab', values_to = 'interpreted_res') %>%
+  filter(!is.na(interpreted_res)) %>%
+  mutate(R=ifelse(interpreted_res=='R',1,0),       ##resistance column
+  genus=str_split_i(mo_organism, ' ',1)) %>%
+  left_join(ab_class_list, by='ab')
 
 
-  #E. COLI
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-org_name='Escherichia coli',
-abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
-)
-
-
-#Klebsiella pneumoniae
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Klebsiella pneumoniae',
-  abs_ref <- c('AMC', 'CXM', 'CTX', 'CRO', 'CAZ', 'CIP', 'GEN', 'TOB', 'TMP', 'SXT', 'MEM', 'TZP', 'TMP', 'LVX', 'ERY')
-)
-
-
-
-#S. aureus
-#MRSA to follow
-
-##
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name="Staphylococcus aureus",
-  abs_ref <- c('FOX', 'CLI', 'ERY', 'GEN', 'TOB', 'FUS', 'LNZ', 'RIF', 'TMP')
-  )
-
-
-
-#Proteus mirabilis
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Proteus mirabilis',
-  abs_ref <- c('AMX', 'AMP', 'AMC', 'CXM', 'CTX', 'CRO', 'CAZ', 'CIP', 'GEN', 'TOB', 'TMP', 'SXT')
-)
-
-
-
-#P. aeruginosa
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Pseudomonas aeruginosa',
-  abs_ref <- c('TZP', 'CAZ', 'MEM', 'IPM', 'CIP', 'TOB')
-)
-
-
-
-
-#S. pneumoniae
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Streptococcus pneumoniae',
-  abs_ref <- c('PEN', 'CIP', 'PHN', 'TCY', 'SXT')
-)
-
-
-#S. pyogenes
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Streptococcus pyogenes',
-  abs_ref <- c('PEN', 'CLI', 'TCY', 'SXT', 'ERY')
-)
-
-#Enterococcus faecalis/ faecium
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Enterococcus faecalis',
-  abs_ref <- c('AMP', 'GEN', 'LNZ', 'TZP', 'VAN')
-)
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Enterococcus faecium',
-  abs_ref <- c('AMP', 'GEN', 'LNZ', 'TZP', 'VAN')
-)
-
-
-
-#Haemophilus influenzae
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Haemophilus influenzae',
-  abs_ref <- c('AMP', 'AMX', 'AMC', 'CTX', 'PEN', 'TCY', 'TMP', 'CIP')
-)
-
-
-#Acinetobacter spp
-
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Acinetobacter baumannii',
-  abs_ref <- c('MEM', 'CIP', 'TMP' ,'GEN', 'TOB', 'AMK')
-)
-
-
-
-#Neisseria gonorrhoeae
-
-amr_grp1_analysis(
-  cntry = cntry,
-  par=par,
-  par_var_name=par_var_name,
-  org_name='Neisseria gonorrhoeae',
-  abs_ref <- c('CFM', 'CRO', 'AZM', 'CIP', 'SPT')
-)
-
-
-}
-
-
-
-#antibiogram
-abg_df <- an_df %>%
-  #filter(mo_organism==org_name) %>%
-  mutate_if(is_sir_eligible, as.sir) %>%
-  antibiogram()
-
-#other bug-drug classes
 
 # End ---------------------------------------------------------------------
 
@@ -433,7 +284,7 @@ openxlsx::write.xlsx(lkp_demographics,file = file.path("Results",paste0("Demogra
 openxlsx::write.xlsx(lkp_facility,file = file.path("Results",paste0("Facilities.",date_var,".xlsx")))
 openxlsx::write.xlsx(sir_outcomes_df_wide,file = file.path("Results",paste0("AST.results.",date_var,".xlsx")))
 openxlsx::write.xlsx(excluded_rec,file = file.path("Results",paste0("Intrinsic.noguidelines.results.",date_var,".xlsx")))
-write.csv(abg_df, paste0('Results/',cntry,'_antibiogram.csv'))
+
 
 
 
