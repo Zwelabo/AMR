@@ -1,2 +1,5 @@
-"","FOX_n","FOX_r","FOX_total_R","GEN_n","GEN_r","GEN_total_R"
-"1",199,103,0.517587939698492,164,36,0.219512195121951
+"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
+"1","Escherichia coli","bl","Aminoglycosides",10,3,0.3,"Aminoglycosides","bl"
+"2","Escherichia coli","bl","Trimethoprims",6,5,0.833333333333333,"Trimethoprims","bl"
+"3","Escherichia coli","ur","Aminoglycosides",161,50,0.31055900621118,"Aminoglycosides","ur"
+"4","Escherichia coli","ur","Trimethoprims",59,46,0.779661016949153,"Trimethoprims","ur"

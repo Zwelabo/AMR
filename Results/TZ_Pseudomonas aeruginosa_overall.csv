@@ -1,2 +1,6 @@
-"","CAZ_n","CAZ_r","CAZ_total_R","MEM_n","MEM_r","MEM_total_R","IPM_n","IPM_r","IPM_total_R","CIP_n","CIP_r","CIP_total_R"
-"1",26,11,NA,23,7,NA,12,7,NA,15,5,NA
+"","ab","n","r","total_R","ab_name"
+"1","CAZ",26,11,0.423076923076923,"Ceftazidime"
+"2","CIP",15,5,0.333333333333333,"Ciprofloxacin"
+"3","GEN",34,13,0.382352941176471,"Gentamicin"
+"4","IPM",12,7,0.583333333333333,"Imipenem"
+"5","MEM",23,7,0.304347826086957,"Meropenem"
