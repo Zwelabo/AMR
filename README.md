@@ -391,6 +391,71 @@ abg_df <- an_df %>%
 ```
 
 # AMC analysis script- MAAP2 (ASLM)
+This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns.
+
+## Requirements
+
+### R Libraries
+- `tidyverse` (dplyr, tidyr, stringr)
+- `readxl`
+- `AMR`
+- `ggplot2`
+- `zoo`
+
+### Input Files
+1. **Reference Data**: 
+   - `test-data/AMC/ATC-DDD WHO core and optional antimicrobials.xlsx`  
+     (WHO ATC/DDD classification with AWaRe categorization)
+
+2. **AMC Test Data**: 
+   - `test-data/AMC/AMC_test_data.xlsx`  
+     (Raw consumption data with product names, strengths, routes, and quantities)
+
+## Workflow
+
+### 1. Data Preparation
+- Imports and filters WHO core antimicrobial list
+- Processes raw AMC data by:
+  - Separating product names from strengths/pack sizes
+  - Standardizing administration routes (`oral` → `o`, `parenteral` → `p`)
+  - Extracting numeric values and units from strength/pack size fields
+
+### 2. Key Calculations
+- **Total grams consumed**: Converts all products to grams (handling mg/g)
+- **DDD equivalents**: `total_g / DDD`
+- **DiD (DDD/1,000 inhabitants/day)**: `(DDD_equivalent × 1000) / (365 × population)`
+- Adds time variables (year, year-month) for trend analysis
+
+### 3. Output Visualizations
+| Plot | File | Description |
+|------|------|-------------|
+| Class Distribution | `AMC_classes_dist.png` | % DiD by antimicrobial class |
+| Class Totals | `AMC_classes.png` | Absolute DiD by class |
+| AWaRe Distribution | `AMC_aware.png` | % DiD by WHO AWaRe category |
+| Consumption Trends | `AMC_trends_holder.png` | Monthly DiD trends by class |
+
+## Usage
+1. Set population size in `pop` variable
+2. Ensure input files are in correct paths (`test-data/AMC/`)
+3. Run script to generate:
+   - Processed data frame (`amc`) with DiD calculations
+   - Visualizations in `plots_AMC/` directory
+
+## Notes
+- Handles only non-combinational drugs
+- Filters out records with DDD_equivalent ≤ 0
+- NA handling for AWaRe categories in visualizations
+- Default population: 20,000,000 (adjust as needed)
+
+## Output Variables
+- `amc`: Final processed dataset with:
+  - Original fields + standardized units
+  - Calculated metrics (total_g, DDD_equivalent, DiD)
+  - Time variables (year, y_month, y_month_date)
+
+## References
+- WHO ATC/DDD Index: https://www.whocc.no/atc_ddd_index/
+- AWaRe Classification: https://www.who.int/groups/aware-classification
 
 # AMU analysis script- MAAP2 (ASLM)
 
