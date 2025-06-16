@@ -18,7 +18,7 @@ Next, install RStudio by navigating to the [RStudio desktop download page](https
 
 Clone the Country-specific MAAP Data Analysis repository from GitHub
 
-1.  Download GitHUb Desktop from the following link: [GitHub-Desktop download page](https://desktop.github.com/download/), by clicking the **Download for Windows** tab.
+1.  Download GitHUb Desktop from the following link: [GitHub-Desktop download page](https://desktop.github.com/download/), by clicking the **Download for Windows or Mac** tab.
 
     Follow the installation instructions and open the application once installation has completed successfully.
 
