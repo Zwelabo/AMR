@@ -44,7 +44,7 @@ Alternatively;
 
 ## Input Data
 
--   Add your input data to the test-data folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
+-   Add your input data to the `test-data` folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
 
 -    Now you can attempt to run the analysis script.
 
