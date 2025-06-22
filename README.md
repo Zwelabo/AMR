@@ -32,7 +32,7 @@ Clone the Country-specific MAAP Data Analysis repository from GitHub
 
     This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
 
-## Load packages
+## Step 1: Load packages
 
 1.  Within RStudio in the bottom right pane, click on Files -\> scripts folder -\> install_packages_pacman.R (This will open the script in the top-right pane)
 2.  Select all (Ctrl-A) and click Run (This will install all the requisite packages and prepare your environment for the analysis)
@@ -52,10 +52,11 @@ Alternatively;
       - 3  look-up tables (metadata files)
       - The test result file (interpreted AST results), with AST interpretations
       - An antibiogram of the tested bug-drug combinations
-      - CSV files of E. coli resistance distribution by Age, gender, and specimen type
+      - CSV files of ESKAPE pathogens resistance distribution by Age, gender, and specimen type
+      - Barplots of the resistance prevalence of ESKAPE pathogens
 
--   In the plots folder:
-      - Barplots of the resistance prevalence of E. coli
+-   You can specify your organisms of interest by adding them on Step 2 below:
+     
 
     *Please note that only E. coli output is currently shown but resistance to all other pathogens can be obtained by substituting accordingly*.
 
