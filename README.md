@@ -2,7 +2,7 @@
 
 These scripts have been developed to simplify and standardize AMR/C/U data analysis through ASLM as part of the MAAP Phase II project funded through Fleming Fund. These scripts are largely based on the free and open-source [AMR package](https://msberends.github.io/AMR/index.html) implemented in R.
 
-# AMR analysis script- MAAP2 (ASLM)
+# Set A: AMR analysis script- MAAP2 (ASLM)
 
 ## Set-up and software installation 
 
@@ -31,6 +31,10 @@ Clone the Country-specific MAAP Data Analysis repository from GitHub
 5.  Click MAAP-Data-Analysis.Rproj
 
     This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
+6. Click on File -\> New File -\> R Script
+   Alternatively just press Ctrl+Shift+N to open a new R Script file
+
+   You can copy and paste the commands in `Step 1 - 4` below to perform your analysis
 
 
 ## Input Data
@@ -83,7 +87,7 @@ eskape_pathogens <- c(
 ```{r}
 # Insert your country code ------------------------------------------------
 
-cntry='TZ' # TZ for Tanzania
+cntry='TZ' # e.g. TZ for Tanzania
 ```
 
 ## Step 4: Execute the main script - this will perform the analysis end-to-end
@@ -101,7 +105,7 @@ source(file.path("scripts","run_step_01.R"))
  
 
 
-# AMC analysis script- MAAP2 (ASLM)
+# Set B: AMC analysis script- MAAP2 (ASLM)
 This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns.
 
 ## Requirements
