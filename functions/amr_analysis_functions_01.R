@@ -202,7 +202,10 @@ overall_ab_resistance_genus <- function(df,path){
 
 
 
-#Antibiotic class resistance
+
+# Antibiotic class resistance ---------------------------------------------
+
+
 
 #Individual pathogens
 antibiotic_classes_res_indiv <- function(df,path) {
@@ -287,9 +290,9 @@ antibiotic_classes_res_grp <- function(df,path) {
   ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,cntry,'_overall_ab_classes','.png')), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
-#-------------------------------------------------------------------------------------------
 
-#plotting functions
+# Plotting functions ------------------------------------------------------
+
 overall_resistance_plot <- function(df) {
   plt_hold <- ggplot(df  %>% filter(n>29), aes(x=reorder(ab_name,total_R), y=total_R*100, group=ab_name))+
     geom_col(position = 'dodge', fill='dodgerblue')+
@@ -324,25 +327,25 @@ indiv_ab_resistance_plot <- function(df) {
 # Analysis functions ------------------------------------------------------
 
 
-amr_individual_pathogens <-  function(org_res_dir,org_name, abs_ref, cntry, par, par_var_name){
-  sel_abs <- subset(abs_ref,  abs_ref %in% an_df_long$ab)
+amr_individual_pathogens <-  function(xdf, org_res_dir,org_name, abs_ref, cntry, par, par_var_name){
+  sel_abs <- subset(abs_ref,  abs_ref %in% xdf$ab)
 
   #subgroups
   environment(indiv_ab_resistance) <- environment()
-  indiv_ab_resistance(an_df_long,org_res_dir)
+  indiv_ab_resistance(xdf,org_res_dir)
 
   #calculating overall resistance
   environment(overall_ab_resistance) <- environment()
-  overall_ab_resistance(an_df_long,org_res_dir)
+  overall_ab_resistance(xdf,org_res_dir)
 
   #class resistance
   environment(antibiotic_classes_res_indiv) <- environment()
-  antibiotic_classes_res_indiv(an_df_long,org_res_dir)
+  antibiotic_classes_res_indiv(xdf,org_res_dir)
 }
 
 
 #MRSA
-mrsa_analysis <-  function(org_name, abs_ref, cntry, par, par_var_name){
+mrsa_analysis <-  function(xdf,org_name, abs_ref, cntry, par, par_var_name){
   mrsa_abs <- c('FOX', 'MET', 'OXA')
   sel_abs_mrsa <- subset(mrsa_abs,  mrsa_abs %in% names(an_df))
   sel_abs <- subset(abs_ref,  abs_ref %in% names(an_df))
@@ -350,33 +353,33 @@ mrsa_analysis <-  function(org_name, abs_ref, cntry, par, par_var_name){
   #MRSA
   #subgroups
   environment(indiv_ab_resistance_sau) <- environment()
-  indiv_ab_resistance_sau(an_df_long)
+  indiv_ab_resistance_sau(xdf)
 
   #calculating overall resistance
   #MRSA
   environment(overall_ab_resistance_sau) <- environment()
-  overall_ab_resistance_sau(an_df_long)
+  overall_ab_resistance_sau(xdf)
 
   #class resistance
   environment(antibiotic_classes_res_indiv) <- environment()
-  antibiotic_classes_res_indiv(an_df_long)
+  antibiotic_classes_res_indiv(xdf)
 }
 
 ##
-amr_pathogen_groups <-  function(org_res_dir,org_name, abs_ref, cntry, par, par_var_name){
-  sel_abs <- subset(abs_ref,  abs_ref %in% an_df_long$ab)
+amr_pathogen_groups <-  function(xdf,org_res_dir,org_name, abs_ref, cntry, par, par_var_name){
+  sel_abs <- subset(abs_ref,  abs_ref %in% xdf$ab)
 
   #subgroups
   environment(indiv_ab_resistance_genus) <- environment()
-  indiv_ab_resistance_genus(an_df_long,org_res_dir)
+  indiv_ab_resistance_genus(xdf,org_res_dir)
 
   #calculating overall resistance
   environment(overall_ab_resistance_genus) <- environment()
-  overall_ab_resistance_genus(an_df_long,org_res_dir)
+  overall_ab_resistance_genus(xdf,org_res_dir)
 
   #class resistance
   environment(antibiotic_classes_res_grp) <- environment()
-  antibiotic_classes_res_grp(an_df_long,org_res_dir)
+  antibiotic_classes_res_grp(xdf,org_res_dir)
 }
 
 #------------------------------------------------------------------------------------------------------

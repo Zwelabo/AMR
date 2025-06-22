@@ -1,6 +1,27 @@
-cntry='TZ'  #please insert your country name
+# Insert your country code ------------------------------------------------
 
 
+cntry='TZ' # TZ for Tanzania
+
+
+# Specify organisms of interest -------------------------------------------
+
+eskape_pathogens <- c(
+  "Enterococcus faecium",
+  "Staphylococcus aureus",
+  "Klebsiella pneumoniae",
+  "Acinetobacter baumannii",
+  "Pseudomonas aeruginosa",
+  "Escherichia coli",
+  "Enterobacter cloacae complex", # or "Enterobacter spp."
+  "Enterobacter aerogenes", # another common Enterobacter species
+  "Enterobacter hormaechei" # another common Enterobacter species
+)
+
+#print(eskape_pathogens)
+orgs_vec <- lkp_organisms %>% dplyr::pull(fullname)
+
+eskape_vec <- orgs_vec[orgs_vec %in% eskape_pathogens]
 
 # Create output folder: Results -------------------------------------------
 
@@ -25,7 +46,7 @@ amr <- get_inputs_and_prelim_cleanup()
 
 # Begin analysis here -----------------------------------------------------
 
-setwd(res_dir)
+# setwd(res_dir)
 
 
 
@@ -115,33 +136,43 @@ an_df <- sir_outcomes_df_wide %>%
 
 ab_cols <- unique(sir_outcomes_df$ab)  #antibiotic columns
 
-ab_class_list <- read.csv('../test-data/ab_class_list.csv')
+if(file.exists('test-data/ab_class_list.csv')){
+  ab_class_list <- read.csv('test-data/ab_class_list.csv')
+}else{
+  stop("Error: The file ab_class_list.csv does not exist. Please add file to test-data and try again.")
+}
 
 an_df_long <- an_df %>%
   pivot_longer(cols=ab_cols, names_to = 'ab', values_to = 'interpreted_res') %>%
   filter(!is.na(interpreted_res)) %>%
   mutate(R=ifelse(interpreted_res=='R',1,0),       ##resistance column
          genus=str_split_i(mo_organism, ' ',1)) %>%
+  mutate(interpreted_res=as.sir(interpreted_res, clean = TRUE)) %>%
   left_join(ab_class_list, by='ab', relationship = "many-to-many")
 
 
 # Write data to file ------------------------------------------------------
 
-# openxlsx::write.xlsx(lkp_organisms,file = file.path("Results",paste0("Organisms.",date_var,".xlsx")))
-# openxlsx::write.xlsx(lkp_demographics,file = file.path("Results",paste0("Demographics.",date_var,".xlsx")))
-# openxlsx::write.xlsx(lkp_facility,file = file.path("Results",paste0("Facilities.",date_var,".xlsx")))
-# openxlsx::write.xlsx(sir_outcomes_df_wide,file = file.path("Results",paste0("AST.results.",date_var,".xlsx")))
-# openxlsx::write.xlsx(excluded_rec,file = file.path("Results",paste0("Intrinsic.noguidelines.results.",date_var,".xlsx")))
+openxlsx::write.xlsx(lkp_organisms,file = file.path("Results",paste0("Organisms.",date_var,".xlsx")))
+openxlsx::write.xlsx(lkp_demographics,file = file.path("Results",paste0("Demographics.",date_var,".xlsx")))
+openxlsx::write.xlsx(lkp_facility,file = file.path("Results",paste0("Facilities.",date_var,".xlsx")))
+openxlsx::write.xlsx(sir_outcomes_df_wide,file = file.path("Results",paste0("AST.results.",date_var,".xlsx")))
+openxlsx::write.xlsx(excluded_rec,file = file.path("Results",paste0("Intrinsic.noguidelines.results.",date_var,".xlsx")))
 
 
-openxlsx::write.xlsx(lkp_organisms,file = paste0("Organisms.",date_var,".xlsx"))
-openxlsx::write.xlsx(lkp_demographics,file = paste0("Demographics.",date_var,".xlsx"))
-openxlsx::write.xlsx(lkp_facility,file = paste0("Facilities.",date_var,".xlsx"))
-openxlsx::write.xlsx(sir_outcomes_df_wide,file = paste0("AST.results.",date_var,".xlsx"))
-openxlsx::write.xlsx(excluded_rec,file = paste0("Intrinsic.noguidelines.results.",date_var,".xlsx"))
+#openxlsx::write.xlsx(lkp_organisms,file = paste0("Organisms.",date_var,".xlsx"))
+#openxlsx::write.xlsx(lkp_demographics,file = paste0("Demographics.",date_var,".xlsx"))
+#openxlsx::write.xlsx(lkp_facility,file = paste0("Facilities.",date_var,".xlsx"))
+#openxlsx::write.xlsx(sir_outcomes_df_wide,file = paste0("AST.results.",date_var,".xlsx"))
+#openxlsx::write.xlsx(excluded_rec,file = paste0("Intrinsic.noguidelines.results.",date_var,".xlsx"))
 
 
 
+# Get bug-drug combinations  ----------------------------------------------
+# where at least 30 (default) isolates are available per species
+
+bug_drug_combos <- format(AMR::bug_drug_combinations(an_df_long))
+openxlsx::write.xlsx(bug_drug_combos,file = file.path("Results",paste0("Bug_drug_combinations.results.",date_var,".xlsx")))
 
 # National antibiogram ----------------------------------------------------
 
@@ -157,62 +188,51 @@ abg_df <- an_df %>%
 openxlsx::write.xlsx(abg_df,file = file.path("Results",paste0("National.antibiogram.results.",date_var,".xlsx")))
 
 
-# Define parameters for subgroup analyses
-par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_type')) %>%
-
-  mutate(id=paste0(param,var_name))
-
-# Add/change pathogen and antibiotics of interests to obtain prevalance
-# rates and plots from the 2nd function (amr_grp1_analysis)
-
-for (i in par_df$id) {
-
-  par=par_df$param[par_df$id==i]
-
-  par_var_name=par_df$var_name[par_df$id==i]
-
-
-  #E. COLI
-  amr_grp1_analysis(
-
-    cntry = cntry,
-
-    par=par,
-
-    par_var_name=par_var_name,
-
-    org_name='Escherichia coli',
-
-    abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
-
-  )
-
-  #other bug-drug combinations to follow
-
-}
-# E. coli
-
-abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
-amr_individual_pathogens(org_name, abs_ref, cntry, par, par_var_name)
+## 2025-06-22: S. Kwenda: Commenting out this part because the
+## amr_grp1_analysis() function doesn't exist in the current repo
+#
+## Define parameters for subgroup analyses
+#par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_type')) %>%
+#
+#  mutate(id=paste0(param,var_name))
+#
+## Add/change pathogen and antibiotics of interests to obtain prevalance
+## rates and plots from the 2nd function (amr_grp1_analysis)
+#
+#for (i in par_df$id) {
+#
+#  par=par_df$param[par_df$id==i]
+#
+#  par_var_name=par_df$var_name[par_df$id==i]
+#
+#
+#  #E. COLI
+#  amr_grp1_analysis(
+#
+#    cntry = cntry,
+#
+#    par=par,
+#
+#    par_var_name=par_var_name,
+#
+#    org_name='Escherichia coli',
+#
+#    abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
+#
+#  )
+#
+#  #other bug-drug combinations to follow
+#
+#}
+## E. coli
+#
+#abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
+#amr_individual_pathogens(org_name, abs_ref, cntry, par, par_var_name)
 
 
 # Detailed analysis -------------------------------------------------------
-eskape_pathogens <- c(
-  "Enterococcus faecium",
-  "Staphylococcus aureus",
-  "Klebsiella pneumoniae",
-  "Acinetobacter baumannii",
-  "Pseudomonas aeruginosa",
-  "Escherichia coli",
-  "Enterobacter cloacae complex", # or "Enterobacter spp."
-  "Enterobacter aerogenes", # another common Enterobacter species
-  "Enterobacter hormaechei" # another common Enterobacter species
-)
 
-#print(eskape_pathogens)
-orgs_vec <- lkp_organisms %>% dplyr::pull(fullname)
-
-eskape_vec <- orgs_vec[orgs_vec %in% eskape_pathogens]
+abs_ref <- unique(an_df_long$ab)
 
 for(i in seq_along(eskape_vec)){
   org_name <- eskape_vec[i]
@@ -222,13 +242,13 @@ for(i in seq_along(eskape_vec)){
 
   if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 
-  amr_individual_pathogens(org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
+  amr_individual_pathogens(an_df_long,org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
 }
 
 
 
 org_name = "Staphylococcus aureus"
-mrsa_analysis(org_name, abs_ref, cntry, par, par_var_name)
+mrsa_analysis(an_df_long,org_name, abs_ref, cntry, par, par_var_name)
 
 
 
@@ -240,6 +260,6 @@ for(i in seq_along(eskape_vec)){
 
   if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 
-  amr_pathogen_groups(org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
+  amr_pathogen_groups(an_df_long,org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
 
   }
