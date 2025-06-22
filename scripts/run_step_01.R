@@ -1,27 +1,25 @@
-# Insert your country code ------------------------------------------------
+## Insert your country code ------------------------------------------------
 
 
-cntry='TZ' # TZ for Tanzania
+#cntry='TZ' # TZ for Tanzania
 
 
 # Specify organisms of interest -------------------------------------------
 
-eskape_pathogens <- c(
-  "Enterococcus faecium",
-  "Staphylococcus aureus",
-  "Klebsiella pneumoniae",
-  "Acinetobacter baumannii",
-  "Pseudomonas aeruginosa",
-  "Escherichia coli",
-  "Enterobacter cloacae complex", # or "Enterobacter spp."
-  "Enterobacter aerogenes", # another common Enterobacter species
-  "Enterobacter hormaechei" # another common Enterobacter species
-)
+#eskape_pathogens <- c(
+#  "Enterococcus faecium",
+#  "Staphylococcus aureus",
+#  "Klebsiella pneumoniae",
+#  "Acinetobacter baumannii",
+#  "Pseudomonas aeruginosa",
+#  "Escherichia coli",
+#  "Enterobacter cloacae complex",
+#  "Enterobacter aerogenes",
+#  "Enterobacter hormaechei"
+#)
 
 #print(eskape_pathogens)
-orgs_vec <- lkp_organisms %>% dplyr::pull(fullname)
 
-eskape_vec <- orgs_vec[orgs_vec %in% eskape_pathogens]
 
 # Create output folder: Results -------------------------------------------
 
@@ -231,6 +229,32 @@ openxlsx::write.xlsx(abg_df,file = file.path("Results",paste0("National.antibiog
 
 
 # Detailed analysis -------------------------------------------------------
+orgs_vec <- lkp_organisms %>% dplyr::pull(fullname)
+
+if (exists("eskape_pathogens")) {
+  eskape_vec <- orgs_vec[orgs_vec %in% eskape_pathogens]
+} else {
+  print("eskape_pathogens vector does NOT exist. Using default ESKAPE pathogens list")
+
+  eskape_pathogens <- c(
+    "Enterococcus faecium",
+    "Staphylococcus aureus",
+    "Klebsiella pneumoniae",
+    "Acinetobacter baumannii",
+    "Pseudomonas aeruginosa",
+    "Escherichia coli",
+    "Enterobacter cloacae complex",
+    "Enterobacter aerogenes",
+    "Enterobacter hormaechei"
+  )
+
+
+  eskape_vec <- orgs_vec[orgs_vec %in% eskape_pathogens]
+
+}
+
+
+
 
 abs_ref <- unique(an_df_long$ab)
 
