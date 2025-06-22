@@ -97,11 +97,15 @@ source(file.path("scripts","run_step_01.R"))
 ```
 
 -   If everything runs successfully, you should have the following in the results folder:
-      - 3  look-up tables (metadata files)
-      - The test result file (interpreted AST results), with AST interpretations
+      - 4 tables based on the provided input file
+        - Demographics
+        - Facilities information
+        - Generic organisms list
+        - The test result file (interpreted AST results), with cleaned and standardized AST interpretations
       - An antibiogram of the tested bug-drug combinations
-      - CSV files of ESKAPE pathogens resistance distribution by Age, gender, and specimen type
-      - Barplots of the resistance prevalence of ESKAPE pathogens
+      - Sub-folders of analyzed pathogens e.g. ESKAPE pathogens, with each folder named after the organism analyzed, the results in these folders include:
+        - CSV files of Resistance distribution by Age, gender, and specimen type
+        - Barplots of the resistance prevalence of ESKAPE pathogens
  
 
 
