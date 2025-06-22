@@ -22,19 +22,19 @@ Clone the Country-specific MAAP Data Analysis repository from GitHub
 
     Follow the installation instructions and open the application once installation has completed successfully.
 
-2.   Go to File -\> Clone repository -\> URL and then paste the following link `https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git` in the first box and
+2.   Go to `File` -\> `Clone repository` -\> URL and then paste the following link `https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git` in the first box and
 
 3.  Click Clone
 
-4.  In RStudio go to File -\> New Project -\> Existing Project -\> Browse (Navigate to your Documents -\> GitHub -\> MAAP-Data-Analysis)
+4.  In RStudio go to `File` -\> `New Project` -\> `Existing Project` -\> Browse (Navigate to your Documents -\> GitHub -\> MAAP-Data-Analysis)
 
 5.  Click MAAP-Data-Analysis.Rproj
 
     This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
-6. Click on File -\> New File -\> R Script
-   Alternatively just press Ctrl+Shift+N to open a new R Script file
+6. Click on `File` -\> `New File` -\> `R Script`
+   Alternatively just press `Ctrl+Shift+N` to open a new R Script file
 
-   You can copy and paste the commands in `Step 1 - 4` below to perform your analysis
+   *You can copy and paste the commands in `Step 1 - 4` below to perform your analysis*
 
 
 ## Input Data
