@@ -231,7 +231,7 @@ openxlsx::write.xlsx(abg_df,file = file.path("Results",paste0("National.antibiog
 # Detailed analysis -------------------------------------------------------
 
 ## Define parameters for subgroup analyses
-par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_date_cleaned')) %>%
+par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_type')) %>%
   mutate(id=paste0(param,var_name))
 
 orgs_vec <- lkp_organisms %>% dplyr::pull(fullname)
