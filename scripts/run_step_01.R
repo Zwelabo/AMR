@@ -229,7 +229,13 @@ openxlsx::write.xlsx(abg_df,file = file.path("Results",paste0("National.antibiog
 
 
 # Detailed analysis -------------------------------------------------------
+
+## Define parameters for subgroup analyses
+par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_date_cleaned')) %>%
+  mutate(id=paste0(param,var_name))
+
 orgs_vec <- lkp_organisms %>% dplyr::pull(fullname)
+
 
 if (exists("eskape_pathogens")) {
   eskape_vec <- orgs_vec[orgs_vec %in% eskape_pathogens]
@@ -254,36 +260,66 @@ if (exists("eskape_pathogens")) {
 }
 
 
+for (i in par_df$id) {
+
+par=par_df$param[par_df$id==i]
+
+par_var_name=par_df$var_name[par_df$id==i]
 
 
-abs_ref <- unique(an_df_long$ab)
+  cntry = cntry
 
-for(i in seq_along(eskape_vec)){
-  org_name <- eskape_vec[i]
-  org_name <-str_replace_all(org_name," ","_")
-  org_name <-str_replace_all(org_name,"\\(|\\)","_")
-  org_res_dir <- file.path("Results",org_name)
+  par=par
 
-  if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
+  par_var_name=par_var_name
 
-  amr_individual_pathogens(an_df_long,org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
+  # org_name='Escherichia coli',
+  # abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
+
+
+
+  abs_ref <- unique(an_df_long$ab)
+
+  for(i in seq_along(eskape_vec)){
+    org_name <- eskape_vec[i]
+    org_name <-str_replace_all(org_name," ","_")
+    org_name <-str_replace_all(org_name,"\\(|\\)","_")
+    org_res_dir <- file.path("Results",org_name)
+
+    if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
+
+    amr_individual_pathogens(an_df_long,org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
+  }
+
+
+
+  org_name = "Staphylococcus aureus"
+  mrsa_analysis(an_df_long,org_name, abs_ref, cntry, par, par_var_name)
+
+
+
+  for(i in seq_along(eskape_vec)){
+    org_name <- eskape_vec[i]
+    org_name <-str_replace_all(org_name," ","_")
+    org_name <-str_replace_all(org_name,"\\(|\\)","_")
+    org_res_dir <- file.path("Results",org_name,"indiv")
+
+    if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
+
+    amr_pathogen_groups(an_df_long,org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
+
+  }
+
+
 }
 
 
 
-org_name = "Staphylococcus aureus"
-mrsa_analysis(an_df_long,org_name, abs_ref, cntry, par, par_var_name)
 
 
 
-for(i in seq_along(eskape_vec)){
-  org_name <- eskape_vec[i]
-  org_name <-str_replace_all(org_name," ","_")
-  org_name <-str_replace_all(org_name,"\\(|\\)","_")
-  org_res_dir <- file.path("Results",org_name,"indiv")
 
-  if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 
-  amr_pathogen_groups(an_df_long,org_res_dir,org_name, abs_ref, cntry, par, par_var_name)
 
-  }
+
+

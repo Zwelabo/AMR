@@ -119,6 +119,17 @@ get_test_results <- function(df){
 
   abx_conformed <- as.ab(abx_vec)
 
+  # Specify mandatory columns -----------------------------------------------
+
+  man_cols = c("specimen_date_cleaned", # data specimen collected
+
+               "Specimen type" , # type of specimemn
+
+               "Organism") # organism identified
+
+  # Remove columns with NA values in any of the mandatory columns
+
+
   # get antimicrobial results
   main_vars <- c("rid","Identification number",man_cols)  ##am adding specimen date here
   amr_res <- df %>%
@@ -149,6 +160,25 @@ get_test_results <- function(df){
 
 pivot_abx_results <- function(df){
   # Abx results preparation -------------------------------------------------
+
+  abx_vec <- c("AMK_ND30","AMP_ND10", "AZM_ND15", "FEP_ND30", "CFM_ND5",
+
+               "CTX_ND30","FOX_ND30", "CAZ_ND30", "CRO_ND30", "CIP_ND5",
+
+               "COL_ND10","DOR_ND10", "ETP_ND10", "GEN_ND10", "IPM_ND10",
+
+               "LVX_ND5", "MEM_ND10", "MNO_ND30", "OXA_ND1", "PEN_ND10",
+
+               "SPT_ND100","TGC_ND15","SXT_ND1.2","AMK_NM","AMP_NM","AZM_NM",
+
+               "FEP_NM","CFM_NM","CTX_NM","FOX_NM","CAZ_NM","CRO_NM","CIP_NM",
+
+               "COL_NM","DOR_NM","ETP_NM","GEN_NM","IPM_NM","LVX_NM","MEM_NM",
+
+               "MNO_NM","OXA_NM","PEN_NM","SPT_NM","TGC_NM","SXT_NM","CTX_NE",
+
+               "CRO_NE","PEN_NE")
+
 
   amr_res <- df %>%
 
