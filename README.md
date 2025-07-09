@@ -139,8 +139,10 @@ Important: Keep the file names exactly as specified above unless otherwise advis
 To run the analysis in RStudio:
 - Open RStudio and go to: File → New File → R Script
 - Copy and paste the following command into the new script:
-  
+
+```{r}
 { source(file.path("scripts", "run_amc_analysis.R")); run_amc_analysis() }
+```
 
 - Run the script. You’ll be prompted to enter your country’s estimated population. The script will then execute an end-to-end analysis automatically.
 
