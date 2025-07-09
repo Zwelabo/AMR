@@ -6,7 +6,7 @@ library(zoo)
 
 #importing the reference file
 who_atc_ref <- read_excel('test-data/AMC/ATC-DDD WHO core and optional antimicrobials.xlsx') %>%
-  filter(`Core or Optional`=='Core') %>%
+  filter(`Core/Optional`=='Core') %>%
   mutate(name_route=paste0(`ATC level name`, '_',tolower(Adm.R))) %>%
   rename(aware_cats=`2023 AWaRe categorization (for J01)`)
 
