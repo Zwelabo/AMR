@@ -110,7 +110,7 @@ source(file.path("scripts","run_step_01.R"))
 
 
 # Set B: AMC analysis script- MAAP2 (ASLM)
-This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns.
+This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns. Please follow the Steps 1 to 4 below to be able to utilize the scripts develop.
 
 ## Step 1: Set-Up and Software Installation
 To get started, install the required software:
