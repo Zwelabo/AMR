@@ -138,7 +138,7 @@ Important: Keep the file names exactly as specified above unless otherwise advis
 ## Step 4: Run the Analysis
 To run the analysis in RStudio:
 - Open RStudio and go to: File → New File → R Script
-- Copy and paste the following command into the new script:
+- Copy and paste the single line of command below into the new script:
 
 ```{r}
 { source(file.path("scripts", "run_amc_analysis.R")); run_amc_analysis() }
