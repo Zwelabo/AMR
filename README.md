@@ -160,10 +160,5 @@ If the script runs successfully, the following visualizations will be generated 
    - Processed data frame (`amc`) with DiD calculations
    - Visualizations in `plots_AMC/` directory
 
-## Notes
-- Handles only non-combinational drugs
-- Filters out records with DDD_equivalent ≤ 0
-- NA handling for AWaRe categories in visualizations
-
 # Set C: AMU analysis script- MAAP2 (ASLM)
 
