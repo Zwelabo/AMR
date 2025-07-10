@@ -167,3 +167,27 @@ This script analyzes Antimicrobial Use (AMU) data from healthcare facilities, pr
 - AMU prevalence metrics (overall, by ward/age/gender)
 - Antimicrobial utilization patterns (by class/molecule/route/AWaRe category)
 
+```{r}
+{ source(file.path("scripts", "run_amu_analysis.R")); run_amu_analysis() }
+```
+## Outputs Created
+If the script runs successfully, the following outputs will be generated and saved in the plots_AMU folder:
+1. Tables (Excel Files)
+- Patient % by age group per facility
+- Patient % by gender per facility
+- Overall AMU prevalence % per facility
+- AMU % by age group per facility
+- AMU % by gender per facility
+- Avg. antimicrobials per patient per facility
+- AMU % by ATC class per facility
+- AMU % by antimicrobial molecule per facility
+- AMU % by AWaRe category per facility
+- AMU % by administration route per facility
+- 
+2. Plots (PNG Files)
+- AMU Prevalence by Site
+- AMU by ATC Class
+- AMU by AWaRe Category
+- AMU by Route
+
+
