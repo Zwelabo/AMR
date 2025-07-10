@@ -332,3 +332,31 @@ amu_route_plot <- ggplot(avg_percent_by_route, aes(x = reorder(AdministrationRou
 # Save the plot to the plots_AMU folder
 ggsave(filename = "plots_AMU/AMU_route.png", plot = amu_route_plot, width = 10, height = 6, dpi = 300)
 
+################################# AMU by Indication Type #################################
+##########################################################################################
+amu_by_indication <- amu_dataset %>%
+  filter(!is.na(IndicationType)) %>%
+  group_by(facility, IndicationType) %>%
+  summarise(n = n()) %>%
+  group_by(facility) %>%
+  mutate(Percent = round(n / sum(n) * 100, 2))
+
+# Calculate average percentage by indication type across all facilities
+avg_percent_by_indication <- amu_by_indication %>%
+  group_by(IndicationType) %>%
+  summarise(Avg_indication_Percent = mean(Percent, na.rm = TRUE))
+
+# Bar chart of AMU by Indication Type
+amu_indication_plot <- ggplot(avg_percent_by_indication, aes(x = reorder(IndicationType, Avg_indication_Percent), y = Avg_indication_Percent)) +
+  geom_bar(stat = "identity", fill = "#1E88E5") +  # Moved fill outside aes()
+  labs(
+    title = "AMU by Indication Type",
+    x = "Indication Type",
+    y = "% of total AMU"
+  ) +
+  theme_classic() +
+  theme(legend.position = 'none',
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))  # Vertical alignment
+
+# Save the plot to the plots_AMU folder
+ggsave(filename = "plots_AMU/AMU_indication.png", plot = amu_indication_plot, width = 10, height = 6, dpi = 300)
