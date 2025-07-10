@@ -162,4 +162,8 @@ If the script runs successfully, the following visualizations will be generated 
    - Visualizations in `plots_AMC/` directory
 
 # Set C: AMU analysis script- MAAP2 (ASLM)
+This script analyzes Antimicrobial Use (AMU) data from healthcare facilities, producing:
+- Demographic summaries (age/gender distributions)
+- AMU prevalence metrics (overall, by ward/age/gender)
+- Antimicrobial utilization patterns (by class/molecule/route/AWaRe category)
 
