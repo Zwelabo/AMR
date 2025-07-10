@@ -75,11 +75,7 @@ aware_data <- read_excel(aware_path, sheet = "2023 AWaRe classification") %>%
 amu_dataset <- amu_dataset %>%
   left_join(aware_data, by = c("AntibioticINNName" = "Antibiotic"))
 
-
-############## Creating tables based on formulas for amu
-##########################################################
-
-############### Demographics - % of surveyed patients by AgeGroup
+############### Demographics - % of surveyed patients by AgeGroup ######################
 demographics_age <- amu_dataset %>%
   distinct(facility, Patient_UniqueID, AgeGroup) %>%
   count(facility, AgeGroup) %>%
@@ -88,7 +84,7 @@ demographics_age <- amu_dataset %>%
 
 write_xlsx(demographics_age, path = "plots_AMU/demographics_by_agegroup.xlsx") # Save to Excel
 
-#################### Demographics - % of surveyed patients by Gender
+#################### Demographics - % of surveyed patients by Gender #####################
 demographics_gender <- amu_dataset %>%
   distinct(facility, Patient_UniqueID, Gender) %>%
   count(facility, Gender) %>%
@@ -97,7 +93,7 @@ demographics_gender <- amu_dataset %>%
 
 write_xlsx(demographics_gender, path = "plots_AMU/demographics_by_gender.xlsx") # Save to Excel
 
-################## AMU Prevalence - overall, by age group, by gender
+################## AMU Prevalence - overall, by age group, by gender #######################
 amu_flags <- amu_dataset %>%
   mutate(On_AM = !is.na(Antimicrobial_Name)) %>%
   distinct(facility, Patient_UniqueID, Gender, AgeGroup, On_AM)
@@ -138,19 +134,24 @@ prevalence_by_gender <- amu_flags %>%
 
 write_xlsx(prevalence_by_gender, path = "plots_AMU/prevalence_by_gender.xlsx") # Save to Excel
 
-##################### AMU Prevalence by Ward
+##################### AMU Prevalence by Ward ##################################
 prevalence_by_ward <- amu_dataset %>%
   distinct(facility, Patient_UniqueID, WardName, Antimicrobial_Name) %>%
   mutate(On_AM = !is.na(Antimicrobial_Name)) %>%
   group_by(facility, WardName) %>%
   summarise(AMU_Prev = round(sum(On_AM) / n() * 100, 2))
 
+# Calculate average percentage by ward across all facilities
+avg_percent_by_ward <- prevalence_by_ward %>%
+  group_by(WardName) %>%
+  summarise(Avg_Ward_Percent = mean(AMU_Prev, na.rm = TRUE))
+
 # Bar chart of AMU prevalence by Ward
-amu_plot <- ggplot(prevalence_by_ward, aes(x = WardName, y = AMU_Prev, fill = facility)) +
-  geom_bar(stat = "identity") +
+amu_prev_ward_plot <- ggplot(avg_percent_by_ward, aes(x = reorder(WardName, Avg_Ward_Percent), y = Avg_Ward_Percent)) +
+  geom_bar(stat = "identity", fill = "#1E88E5") +  # Moved fill outside aes()
   labs(
-    title = "Antimicrobial Use Prevalence by Hospital Ward",
-    x = "Ward",
+    title = "AMU Prevalence by Hospital Ward",
+    x = "Hospital Ward",
     y = "AMU Prevalence (%)"
   ) +
   theme_classic() +
@@ -158,4 +159,122 @@ amu_plot <- ggplot(prevalence_by_ward, aes(x = WardName, y = AMU_Prev, fill = fa
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))  # Vertical alignment
 
 # Save the plot to the plots_AMU folder
-ggsave(filename = "plots_AMU/AMU_prevalence_by_Ward.png", plot = amu_plot, width = 10, height = 6, dpi = 300)
+ggsave(filename = "plots_AMU/AMU_prevalence_by_Ward.png", plot = amu_prev_ward_plot, width = 10, height = 6, dpi = 300)
+
+################### Avg number of antimicrobials per patient ####################
+avg_antimicrobials <- amu_dataset %>%
+  filter(!is.na(Antimicrobial_Name)) %>%
+  group_by(facility) %>%
+  summarise(
+    Total_AMs = n(),
+    Total_Patients_on_AMs = n_distinct(Patient_UniqueID),
+    Average_AMs = round(Total_AMs / Total_Patients_on_AMs, 2)
+  )
+
+write_xlsx(avg_antimicrobials, path = "plots_AMU/AMU_average_antimicrobialsr.xlsx") # Save to Excel
+
+###################### AMU by ATC Class #################################
+amu_by_class <- amu_dataset %>%
+  filter(!is.na(Class)) %>%
+  group_by(facility, Class) %>%
+  summarise(n = n()) %>%
+  group_by(facility) %>%
+  mutate(Percent = round(n / sum(n) * 100, 2))
+
+write_xlsx(amu_by_class, path = "plots_AMU/AMU_by_class.xlsx") # Save to Excel
+
+# Calculate average percentage by class across all facilities
+avg_percent_by_class <- amu_by_class %>%
+  group_by(Class) %>%
+  summarise(Avg_Percent = mean(Percent, na.rm = TRUE))
+
+# Bar chart of AMU by class
+amu_class_plot <- ggplot(avg_percent_by_class, aes(x = reorder(Class, Avg_Percent), y = Avg_Percent)) +
+  geom_bar(stat = "identity", fill = "#1E88E5") +  # Moved fill outside aes()
+  labs(
+    title = "AMU by ATC classification",
+    x = "ATC class",
+    y = "% of total AMU"
+  ) +
+  theme_classic() +
+  theme(legend.position = 'none',
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))  # Vertical alignment
+
+# Save the plot to the plots_AMU folder
+ggsave(filename = "plots_AMU/AMU_Class.png", plot = amu_class_plot, width = 10, height = 6, dpi = 300)
+
+##################### AMU by Antimicrobial Molecule ##########################
+amu_by_molecule <- amu_dataset %>%
+  filter(!is.na(Antimicrobial_Name)) %>%
+  group_by(facility, Antimicrobial_Name) %>%
+  summarise(n = n()) %>%
+  group_by(facility) %>%
+  mutate(Percent = round(n / sum(n) * 100, 2))
+
+write_xlsx(amu_by_molecule, path = "plots_AMU/AMU_by_molecule.xlsx") # Save to Excel
+
+# Calculate average percentage by Molecule across all facilities
+avg_percent_by_molecule <- amu_by_molecule %>%
+  group_by(Antimicrobial_Name) %>%
+  summarise(Avg_molecule_Percent = mean(Percent, na.rm = TRUE))
+
+###################### AMU by AWaRe Category #################################
+amu_by_category <- amu_dataset %>%
+  filter(!is.na(Category)) %>%
+  group_by(facility, Category) %>%
+  summarise(n = n()) %>%
+  group_by(facility) %>%
+  mutate(Percent = round(n / sum(n) * 100, 2))
+
+write_xlsx(amu_by_category, path = "plots_AMU/AMU_by_category.xlsx") # Save to Excel
+
+# Calculate average percentage by AWaRe Category across all facilities
+avg_percent_by_category <- amu_by_category %>%
+  group_by(Category) %>%
+  summarise(Avg_category_Percent = mean(Percent, na.rm = TRUE))
+
+# Bar chart of AMU by AWaRe Category
+amu_category_plot <- ggplot(avg_percent_by_category, aes(x = reorder(Category, Avg_category_Percent), y = Avg_category_Percent)) +
+  geom_bar(stat = "identity", fill = "#1E88E5") +  # Moved fill outside aes()
+  labs(
+    title = "AMU by AWaRe Categorization",
+    x = "AWaRe Category",
+    y = "% of total AMU"
+  ) +
+  theme_classic() +
+  theme(legend.position = 'none',
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))  # Vertical alignment
+
+# Save the plot to the plots_AMU folder
+ggsave(filename = "plots_AMU/AMU_Category.png", plot = amu_category_plot, width = 10, height = 6, dpi = 300)
+
+######################## AMU by Route of Administration ##########################
+amu_by_route <- amu_dataset %>%
+  filter(!is.na(AdministrationRoute)) %>%
+  group_by(facility, AdministrationRoute) %>%
+  summarise(n = n()) %>%
+  group_by(facility) %>%
+  mutate(Percent = round(n / sum(n) * 100, 2))
+
+write_xlsx(amu_by_route, path = "plots_AMU/AMU_by_adminroute.xlsx") # Save to Excel
+
+# Calculate average percentage by route of Administration across all facilities
+avg_percent_by_route <- amu_by_route %>%
+  group_by(AdministrationRoute) %>%
+  summarise(Avg_route_Percent = mean(Percent, na.rm = TRUE))
+
+# Bar chart of AMU by Route of Administration
+amu_route_plot <- ggplot(avg_percent_by_route, aes(x = reorder(AdministrationRoute, Avg_route_Percent), y = Avg_route_Percent)) +
+  geom_bar(stat = "identity", fill = "#1E88E5") +  # Moved fill outside aes()
+  labs(
+    title = "AMU by Route of Administration",
+    x = "Route of Administration",
+    y = "% of total AMU"
+  ) +
+  theme_classic() +
+  theme(legend.position = 'none',
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))  # Vertical alignment
+
+# Save the plot to the plots_AMU folder
+ggsave(filename = "plots_AMU/AMU_route.png", plot = amu_route_plot, width = 10, height = 6, dpi = 300)
+
