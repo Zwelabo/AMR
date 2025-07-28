@@ -62,66 +62,11 @@ convert2sir_fun <- function(df){
 }
 
 
-###Analysis functions
 
-amr_individual_pathogens <-  function(org_name, abs_ref, cntry, par, par_var_name){
-  sel_abs <- subset(abs_ref,  abs_ref %in% an_df_long$ab)
-
-  #subgroups
-  environment(indiv_ab_resistance) <- environment()
-  indiv_ab_resistance(an_df_long)
-
-  #calculating overall resistance
-  environment(overall_ab_resistance) <- environment()
-  overall_ab_resistance(an_df_long)
-
-  #class resistance
-  environment(antibiotic_classes_res_indiv) <- environment()
-  antibiotic_classes_res_indiv(an_df_long)
-}
-
-
-#MRSA
-mrsa_analysis <-  function(org_name, abs_ref, cntry, par, par_var_name){
-  mrsa_abs <- c('FOX', 'MET', 'OXA')
-  sel_abs_mrsa <- subset(mrsa_abs,  mrsa_abs %in% names(an_df))
-  sel_abs <- subset(abs_ref,  abs_ref %in% names(an_df))
-
-  #MRSA
-  #subgroups
-  environment(indiv_ab_resistance_sau) <- environment()
-  indiv_ab_resistance_sau(an_df_long)
-
-  #calculating overall resistance
-  #MRSA
-  environment(overall_ab_resistance_sau) <- environment()
-  overall_ab_resistance_sau(an_df_long)
-
-  #class resistance
-  environment(antibiotic_classes_res_indiv) <- environment()
-  antibiotic_classes_res_indiv(an_df_long)
-}
-
-##
-amr_pathogen_groups <-  function(org_name, abs_ref, cntry, par, par_var_name){
-  sel_abs <- subset(abs_ref,  abs_ref %in% an_df_long$ab)
-
-  #subgroups
-  environment(indiv_ab_resistance_genus) <- environment()
-  indiv_ab_resistance_genus(an_df_long)
-
-  #calculating overall resistance
-  environment(overall_ab_resistance_genus) <- environment()
-  overall_ab_resistance_genus(an_df_long)
-
-  #class resistance
-  environment(antibiotic_classes_res_grp) <- environment()
-  antibiotic_classes_res_grp(an_df_long)
-}
 #------------------------------------------------------------------------------------------------
 
 ##Resistance calculation functions
-indiv_ab_resistance <- function(df){
+indiv_ab_resistance <- function(df,path){
   hold_df <- df %>%
     filter(mo_organism==org_name) %>%
     group_by(mo_organism, get(par_var_name), ab) %>%
@@ -131,14 +76,14 @@ indiv_ab_resistance <- function(df){
     mutate(ab_name=ab_name(ab),
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df, paste0('outputs/',cntry,'_',org_name,'_',par,'.csv'))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,'.csv')))
 
   #plots
-  ggsave(paste0('plots/',cntry,'_',org_name,'_overall_abs','.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_individual_abs','.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 
-overall_ab_resistance <- function(df){
+overall_ab_resistance <- function(df,path){
   hold_df <- df %>%
     filter(mo_organism==org_name) %>%
     filter(ab %in% sel_abs) %>%
@@ -148,9 +93,9 @@ overall_ab_resistance <- function(df){
               total_R = r/n  ) %>%
     mutate(ab_name=ab_name(ab))
 
-  write.csv(hold_df, paste0('Results/',cntry,'_',org_name,'_overall_abs.csv'))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_abs.csv')))
 
-  ggsave(paste0('plots/',cntry,'_',org_name,'_overall_abs','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_abs','.png')), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 
@@ -166,7 +111,7 @@ indiv_ab_resistance_sau <- function(df){
            var_name=`get(par_var_name)`)
 
 
-  write.csv(hold_df_mrsa, paste0('outputs/',cntry,'_',org_name,'_mrsa',par,'.csv'))
+  write.csv(hold_df_mrsa, paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_mrsa',par,'.csv'))
 
 
   #other combos
@@ -180,11 +125,11 @@ indiv_ab_resistance_sau <- function(df){
     mutate(ab_name=ab_name(ab),
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df_a, paste0('outputs/',cntry,'_',org_name,'_',par,'.csv'))
+  write.csv(hold_df_a, paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_',par,'.csv'))
 
   hold_df <- bind_rows(hold_df_a, hold_df_mrsa)
 
-  ggsave(paste0('plots/',cntry,'_',org_name,'_overall_abs','.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_overall_abs','.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 overall_ab_resistance_sau <- function(df){
@@ -198,7 +143,7 @@ overall_ab_resistance_sau <- function(df){
     mutate(ab_name='MRSA')
 
 
-  write.csv(hold_df_mrsa, paste0('Results/',cntry,'_',org_name,'mrsa_overall_abs.csv'))
+  write.csv(hold_df_mrsa, paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'mrsa_overall_abs.csv'))
 
   #other combos
   hold_df_a <- df %>%
@@ -210,16 +155,16 @@ overall_ab_resistance_sau <- function(df){
     mutate(ab_name=ab_name(ab))
 
 
-  write.csv(hold_df_a, paste0('Results/',cntry,'_',org_name,'_overall_abs.csv'))
+  write.csv(hold_df_a, paste0('Results_AMR/',cntry,'_',org_name,'_overall_abs.csv'))
 
   hold_df <- bind_rows(hold_df_a, hold_df_mrsa)
 
   #plots
-  ggsave(paste0('plots/',cntry,'_',org_name,'_overall_abs','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_overall_abs','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
   #pathogen groups
-indiv_ab_resistance_genus <- function(df){
+indiv_ab_resistance_genus <- function(df,path){
     hold_df <- df %>%
       mutate(mo_organism=genus) %>%
       filter(ab %in% sel_abs) %>%
@@ -231,14 +176,14 @@ indiv_ab_resistance_genus <- function(df){
       mutate(ab_name=ab_name(ab),
              var_name=`get(par_var_name)`)
 
-    write.csv(hold_df, paste0('outputs/',cntry,'_',org_name,'_',par,'.csv'))
+    write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,'.csv')))
 
     #plots
-    ggsave(paste0('plots/',cntry,'_',org_name,'_overall_abs','.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+    ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_abs','.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
   }
 
 
-overall_ab_resistance_genus <- function(df){
+overall_ab_resistance_genus <- function(df,path){
     hold_df <- df %>%
       mutate(mo_organism=genus) %>%
       filter(mo_organism==org_name) %>%
@@ -249,18 +194,21 @@ overall_ab_resistance_genus <- function(df){
                 total_R = r/n  ) %>%
       mutate(ab_name=ab_name(ab))
 
-    write.csv(hold_df, paste0('Results/',cntry,'_',org_name,'_overall_abs.csv'))
+    write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_abs.csv')))
 
   #plots
-  ggsave(paste0('plots/',cntry,'_',org_name,'_overall_abs','.png'),overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_abs','.png')),overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 
 
-#Antibiotic class resistance
+
+# Antibiotic class resistance ---------------------------------------------
+
+
 
 #Individual pathogens
-antibiotic_classes_res_indiv <- function(df) {
+antibiotic_classes_res_indiv <- function(df,path) {
 
   abx_classes <- unique(ab_group(abs_ref)) #returns the antibiotic classes
 
@@ -275,10 +223,10 @@ antibiotic_classes_res_indiv <- function(df) {
     mutate(ab_name=ab_class,
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df, paste0('outputs/',cntry,'_',org_name,'_',par,cntry,'ab_classes.csv'))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.csv')))
 
   #plot
-  ggsave(paste0('plots/',cntry,'_',org_name,'_',par,cntry,'ab_classes.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 
 
   #calculating overall resistance
@@ -293,15 +241,15 @@ antibiotic_classes_res_indiv <- function(df) {
               total_R = r/n  ) %>%
     mutate(ab_name=ab_class)
 
-  write.csv(hold_df, paste0('Results/',cntry,'_',org_name,'_overall_ab_classes.csv'))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_ab_classes.csv')))
 
   #plot
-  ggsave(paste0('plots/',cntry,'_',org_name,cntry,'_overall_ab_classes','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,cntry,'_overall_ab_classes','.png')), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 
 #Grouped pathogens
-antibiotic_classes_res_grp <- function(df) {
+antibiotic_classes_res_grp <- function(df,path) {
 
   abx_classes <- unique(ab_group(abs_ref)) #returns the antibiotic classes
 
@@ -317,10 +265,10 @@ antibiotic_classes_res_grp <- function(df) {
     mutate(ab_name=ab_class,
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df, paste0('outputs/',cntry,'_',org_name,'_',par,cntry,'ab_classes.csv'))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.csv')))
 
   #plot
-  ggsave(paste0('plots/',cntry,'_',org_name,'_',par,cntry,'ab_classes.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 
 
   #calculating overall resistance
@@ -336,15 +284,15 @@ antibiotic_classes_res_grp <- function(df) {
               total_R = r/n  ) %>%
     mutate(ab_name=ab_class)
 
-  write.csv(hold_df, paste0('Results/',cntry,'_',org_name,'_overall_ab_classes.csv'))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_ab_classes.csv')))
 
   #plot
-  ggsave(paste0('plots/',cntry,'_',org_name,cntry,'_overall_ab_classes','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,cntry,'_overall_ab_classes','.png')), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
-#-------------------------------------------------------------------------------------------
 
-#plotting functions
+# Plotting functions ------------------------------------------------------
+
 overall_resistance_plot <- function(df) {
   plt_hold <- ggplot(df  %>% filter(n>29), aes(x=reorder(ab_name,total_R), y=total_R*100, group=ab_name))+
     geom_col(position = 'dodge', fill='dodgerblue')+
@@ -373,6 +321,67 @@ indiv_ab_resistance_plot <- function(df) {
           panel.border = element_rect(colour = "black", fill=NA, size=0.5),legend.position='bottom')
   plt_hold
 }
+
+
+
+# Analysis functions ------------------------------------------------------
+
+
+amr_individual_pathogens <-  function(xdf, org_res_dir,org_name, abs_ref, cntry, par, par_var_name){
+  sel_abs <- subset(abs_ref,  abs_ref %in% xdf$ab)
+
+  #subgroups
+  environment(indiv_ab_resistance) <- environment()
+  indiv_ab_resistance(xdf,org_res_dir)
+
+  #calculating overall resistance
+  environment(overall_ab_resistance) <- environment()
+  overall_ab_resistance(xdf,org_res_dir)
+
+  #class resistance
+  environment(antibiotic_classes_res_indiv) <- environment()
+  antibiotic_classes_res_indiv(xdf,org_res_dir)
+}
+
+
+#MRSA
+mrsa_analysis <-  function(xdf,org_name, abs_ref, cntry, par, par_var_name){
+  mrsa_abs <- c('FOX', 'MET', 'OXA')
+  sel_abs_mrsa <- subset(mrsa_abs,  mrsa_abs %in% names(an_df))
+  sel_abs <- subset(abs_ref,  abs_ref %in% names(an_df))
+
+  #MRSA
+  #subgroups
+  environment(indiv_ab_resistance_sau) <- environment()
+  indiv_ab_resistance_sau(xdf)
+
+  #calculating overall resistance
+  #MRSA
+  environment(overall_ab_resistance_sau) <- environment()
+  overall_ab_resistance_sau(xdf)
+
+  #class resistance
+  environment(antibiotic_classes_res_indiv) <- environment()
+  antibiotic_classes_res_indiv(xdf)
+}
+
+##
+amr_pathogen_groups <-  function(xdf,org_res_dir,org_name, abs_ref, cntry, par, par_var_name){
+  sel_abs <- subset(abs_ref,  abs_ref %in% xdf$ab)
+
+  #subgroups
+  environment(indiv_ab_resistance_genus) <- environment()
+  indiv_ab_resistance_genus(xdf,org_res_dir)
+
+  #calculating overall resistance
+  environment(overall_ab_resistance_genus) <- environment()
+  overall_ab_resistance_genus(xdf,org_res_dir)
+
+  #class resistance
+  environment(antibiotic_classes_res_grp) <- environment()
+  antibiotic_classes_res_grp(xdf,org_res_dir)
+}
+
 #------------------------------------------------------------------------------------------------------
 
 

@@ -10,9 +10,9 @@ if (!require("pacman", quietly = TRUE)){
 
 pacman::p_load(
   AMR,
-  tidyverse,          
+  tidyverse,
   readxl,
-  remotes,       
+  remotes,
   ggplot2,
   colorRamp2,
   ggalt,
@@ -25,7 +25,8 @@ pacman::p_load(
   readxl,
   ggrepel,
   ggtext,
-  BiocManager
+  BiocManager,
+  ggrepel
 )
 
 
@@ -33,13 +34,13 @@ pacman::p_load(
 #   BiocManager::install("ComplexHeatmap")
 #   library(ComplexHeatmap)
 # }
-# 
-# 
+#
+#
 # if (!require("tidyHeatmap", quietly = TRUE)){
 #   install.packages("tidyHeatmap")
 #   library(tidyHeatmap)
 # }
-# 
+#
 # if (!require("ggtree", quietly = TRUE)){
 #   BiocManager::install("ggtree")
 #   library(ggtree)
