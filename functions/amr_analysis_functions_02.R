@@ -100,12 +100,14 @@ get_test_results <- function(df){
 
  # unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code)
 
-  abx_vec <- unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code)
+  abx_vec_dict <- c(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),
+               str_split_i(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),'_',1),
+               unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$AntiMicrobialAgent))
 
 
   # map antibiotics
 
-  abx_conformed <- as.ab(abx_vec)
+  abx_conformed <- as.ab(abx_vec_dict)
 
   # Specify mandatory columns -----------------------------------------------
   man_cols = c("specimen_date_cleaned", # data specimen collected
@@ -114,6 +116,8 @@ get_test_results <- function(df){
 
                "Organism",      # organism identified
                "specimen_date_cleaned") #date of collection
+
+  abx_vec <- names(df)[tolower(names(df)) %in% tolower(c(abx_vec_dict))]
 
 
   # get antimicrobial results
