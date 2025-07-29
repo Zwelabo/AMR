@@ -1,0 +1,5 @@
+"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
+"1","Staphylococcus aureus","f","FOX",192,100,0.520833333333333,"Cefoxitin","f"
+"2","Staphylococcus aureus","f","GEN",76,15,0.197368421052632,"Gentamicin","f"
+"3","Staphylococcus aureus","m","FOX",206,106,0.514563106796116,"Cefoxitin","m"
+"4","Staphylococcus aureus","m","GEN",88,21,0.238636363636364,"Gentamicin","m"

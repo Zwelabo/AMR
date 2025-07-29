@@ -1,0 +1,6 @@
+"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
+"1","Acinetobacter baumannii","f","Aminoglycosides",1,0,0,"Aminoglycosides","f"
+"2","Acinetobacter baumannii","f","Carbapenems",1,0,0,"Carbapenems","f"
+"3","Acinetobacter baumannii","m","Aminoglycosides",1,1,1,"Aminoglycosides","m"
+"4","Acinetobacter baumannii","m","Carbapenems",1,1,1,"Carbapenems","m"
+"5","Acinetobacter baumannii","m","Trimethoprims",1,0,0,"Trimethoprims","m"
