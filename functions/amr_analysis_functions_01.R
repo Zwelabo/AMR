@@ -7,10 +7,9 @@
 
 convert2sir_fun <- function(df){
 
-  df_len <- nrow(df)
-  if(df_len == 0){
-    stop("df seems empty.")
-  }
+  if (is.null(df) || nrow(df) == 0) {    #if there are no sir reported or no zones/mics
+    x <- NULL
+  } else{
 
   res_list <- list()
 
@@ -63,7 +62,7 @@ convert2sir_fun <- function(df){
   return(x)
 
 }
-
+}
 
 
 #------------------------------------------------------------------------------------------------
@@ -114,7 +113,7 @@ indiv_ab_resistance_sau <- function(df){
            var_name=`get(par_var_name)`)
 
 
-  write.csv(hold_df_mrsa, paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_mrsa',par,'.csv'))
+  write.csv(hold_df_mrsa, paste0(cntry, '/Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_mrsa',par,'.csv'))
 
 
   #other combos
@@ -128,11 +127,11 @@ indiv_ab_resistance_sau <- function(df){
     mutate(ab_name=ab_name(ab),
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df_a, paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_',par,'.csv'))
+  write.csv(hold_df_a, paste0(cntry, '/Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_',par,'.csv'))
 
   hold_df <- bind_rows(hold_df_a, hold_df_mrsa)
 
-  ggsave(paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_overall_abs','.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(paste0(cntry, '/Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_overall_abs','.png'), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 overall_ab_resistance_sau <- function(df){
@@ -146,7 +145,7 @@ overall_ab_resistance_sau <- function(df){
     mutate(ab_name='MRSA')
 
 
-  write.csv(hold_df_mrsa, paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'mrsa_overall_abs.csv'))
+  write.csv(hold_df_mrsa, paste0(cntry, '/Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'mrsa_overall_abs.csv'))
 
   #other combos
   hold_df_a <- df %>%
@@ -158,12 +157,12 @@ overall_ab_resistance_sau <- function(df){
     mutate(ab_name=ab_name(ab))
 
 
-  write.csv(hold_df_a, paste0('Results_AMR/',cntry,'_',org_name,'_overall_abs.csv'))
+  write.csv(hold_df_a, paste0(cntry, '/Results_AMR/',cntry,'_',org_name,'_overall_abs.csv'))
 
   hold_df <- bind_rows(hold_df_a, hold_df_mrsa)
 
   #plots
-  ggsave(paste0('Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_overall_abs','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(paste0(cntry, '/Results_AMR/Bacteria/Staphylococcus_aureus/',cntry,'_',org_name,'_overall_abs','.png'), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
   #pathogen groups
@@ -226,10 +225,10 @@ antibiotic_classes_res_indiv <- function(df,path) {
     mutate(ab_name=ab_class,
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.csv')))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,'ab_classes.csv')))
 
   #plot
-  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,'ab_classes.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 
 
   #calculating overall resistance
@@ -247,7 +246,7 @@ antibiotic_classes_res_indiv <- function(df,path) {
   write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_ab_classes.csv')))
 
   #plot
-  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,cntry,'_overall_ab_classes','.png')), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_overall_ab_classes','.png')), overall_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 }
 
 
@@ -268,10 +267,10 @@ antibiotic_classes_res_grp <- function(df,path) {
     mutate(ab_name=ab_class,
            var_name=`get(par_var_name)`)
 
-  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.csv')))
+  write.csv(hold_df, file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,'ab_classes.csv')))
 
   #plot
-  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,cntry,'ab_classes.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
+  ggsave(file.path(org_res_dir,paste0(cntry,'_',org_name,'_',par,'ab_classes.png')), indiv_ab_resistance_plot(hold_df), width=8, height=8, units="in", dpi=300)
 
 
   #calculating overall resistance

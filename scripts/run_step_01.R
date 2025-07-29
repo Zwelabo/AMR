@@ -8,7 +8,7 @@
 # Create output folder: Results -------------------------------------------
 
 
-res_dir <- file.path("Results")
+res_dir <- file.path(paste0(cntry,"/Results_AMR"))
 
 if (!dir.exists(res_dir)){
 
@@ -53,18 +53,14 @@ amr_sir <- convert2sir_fun(famr_long_sir)
 
 # combine results
 
-sir_outcomes_df <- amr_con %>%
-
-  dplyr::union(amr_sir) %>%
+sir_outcomes_df <- dplyr::bind_rows(amr_con, amr_sir) %>%
 
   dplyr::filter(intrinsic_res_status=='FALSE') %>%   #drop the intrinsically resistant bug-drugs to not skew results
 
   dplyr::filter(interpreted_res!='NA')  #drop the UNINTERPRETABLE COMBOS FROM GUIDELINES
 
 
-excluded_rec <- amr_con %>%
-
-  dplyr::union(amr_sir) %>%
+excluded_rec <- bind_rows(amr_con, amr_sir) %>%
 
   dplyr::filter(intrinsic_res_status=='TRUE'| interpreted_res=='NA')
 
@@ -134,11 +130,11 @@ an_df_long <- an_df %>%
 
 # Write data to file ------------------------------------------------------
 
-openxlsx::write.xlsx(lkp_organisms,file = file.path("Results_AMR",paste0("Organisms.",date_var,".xlsx")))
-openxlsx::write.xlsx(lkp_demographics,file = file.path("Results_AMR",paste0("Demographics.",date_var,".xlsx")))
-openxlsx::write.xlsx(lkp_facility,file = file.path("Results_AMR",paste0("Facilities.",date_var,".xlsx")))
-openxlsx::write.xlsx(sir_outcomes_df_wide,file = file.path("Results_AMR",paste0("AST.results.",date_var,".xlsx")))
-openxlsx::write.xlsx(excluded_rec,file = file.path("Results_AMR",paste0("Intrinsic.noguidelines.results.",date_var,".xlsx")))
+openxlsx::write.xlsx(lkp_organisms,file = paste0(cntry,"/Results_AMR/Organisms.",date_var,".xlsx"))
+openxlsx::write.xlsx(lkp_demographics,file = paste0(cntry,"/Results_AMR/Demographics.",date_var,".xlsx"))
+openxlsx::write.xlsx(lkp_facility,file = paste0(cntry,"/Results_AMR/Facilities.",date_var,".xlsx"))
+openxlsx::write.xlsx(sir_outcomes_df_wide,file = paste0(cntry,"/Results_AMR/AST.results.",date_var,".xlsx"))
+openxlsx::write.xlsx(excluded_rec,file = paste0(cntry,"/Results_AMR/Intrinsic.noguidelines.results.",date_var,".xlsx"))
 
 
 #openxlsx::write.xlsx(lkp_organisms,file = paste0("Organisms.",date_var,".xlsx"))
@@ -167,7 +163,7 @@ abg_df <- an_df %>%
 
   antibiogram()
 
-openxlsx::write.xlsx(abg_df,file = file.path("Results_AMR",paste0("National.antibiogram.results.",date_var,".xlsx")))  #Antibiograms for where n is at least 30
+openxlsx::write.xlsx(abg_df,file = file.path(paste0(cntry,"/Results_AMR/National.antibiogram.results.",date_var,".xlsx")))  #Antibiograms for where n is at least 30
 
 
 # Detailed analysis -------------------------------------------------------
@@ -271,7 +267,7 @@ par_var_name=par_df$var_name[par_df$id==i]
     org_name <- priority_bact_vec[i]
     org_name_dir <-str_replace_all(org_name," ","_")
     org_name_dir <-str_replace_all(org_name_dir,"\\(|\\)","_")
-    org_res_dir <- file.path("Results_AMR/Bacteria",org_name_dir, 'indiv')
+    org_res_dir <- file.path(paste0(cntry,"/Results_AMR/Bacteria"),org_name_dir, 'indiv')
 
     if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 
@@ -289,7 +285,7 @@ par_var_name=par_df$var_name[par_df$id==i]
     org_name <- priority_bact_vec[i] ##extracting the genus name
     org_name_dir <-str_replace_all(org_name," ","_")
     org_name_dir <-str_replace_all(org_name_dir,"\\(|\\)","_")
-    org_res_dir <- file.path("Results_AMR/Bacteria",org_name_dir,"pathogen_grp")
+    org_res_dir <- file.path(paste0(cntry,"/Results_AMR/Bacteria"),org_name_dir,"pathogen_grp")
 
     if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 
@@ -302,7 +298,7 @@ par_var_name=par_df$var_name[par_df$id==i]
     org_name <- priority_fungi_vec[i]
     org_name_dir <-str_replace_all(org_name," ","_")
     org_name_dir <-str_replace_all(org_name_dir,"\\(|\\)","_")
-    org_res_dir <- file.path("Results_AMR/Fungi",org_name_dir, 'indiv')
+    org_res_dir <- file.path(paste0(cntry,"/Results_AMR/Fungi"),org_name_dir, 'indiv')
 
     if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 
@@ -314,7 +310,7 @@ par_var_name=par_df$var_name[par_df$id==i]
     org_name <- priority_fungi_vec[i]   ##extracting the genus name
     org_name_dir <-str_replace_all(org_name," ","_")
     org_name_dir <-str_replace_all(org_name_dir,"\\(|\\)","_")
-    org_res_dir <- file.path("Results_AMR/Fungi",org_name_dir,"pathogen_grp")
+    org_res_dir <- file.path(paste0(cntry,"/Results_AMR/Fungi"),org_name_dir,"pathogen_grp")
 
     if(!dir.exists(org_res_dir)){dir.create(org_res_dir, recursive = T)}
 

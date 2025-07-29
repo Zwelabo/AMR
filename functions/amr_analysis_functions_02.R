@@ -181,6 +181,15 @@ pivot_abx_results <- function(df){
 
     mutate(ab = as.ab(drug_code))
 
+  if(nrow(famr_long) > 0){
+
+    famr_long=famr_long
+
+  } else {
+    famr_long=NULL
+    #stop("famr_long seems empty.")
+  }
+
   return(famr_long)
 
 }
@@ -193,7 +202,7 @@ get_sir_interpr <- function(df){
 
     mutate(int_id=row_number()) %>%
 
-    dplyr::filter(str_detect(vals,'R|I|S|SDD|NI')) %>%
+    dplyr::filter(str_detect(vals,'(?i)R|I|S|SDD|NI')) %>%
 
     mutate(test_type=ifelse(grepl('_NM|_EM', drug_code), 'mic','disk'),
 
@@ -209,6 +218,16 @@ get_sir_interpr <- function(df){
 
     )
 
+  if(nrow(famr_long_sir) > 0){
+
+    famr_long_sir=famr_long_sir
+
+  } else {
+    famr_long_sir=NULL
+    #stop("famr_long seems empty.")
+  }
+
+
   return(famr_long_sir)
 }
 
@@ -221,7 +240,7 @@ get_con_interp <- function(df){
 
     mutate(int_id=row_number()) %>%
 
-    dplyr::filter(!str_detect(vals,'R|I|S|SDD|NI')) %>%
+    dplyr::filter(!str_detect(vals,'(?i)R|I|S|SDD|NI')) %>%
 
     # Use Gilbert's logic to determine if DISK or MIC
 
