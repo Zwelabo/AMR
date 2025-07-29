@@ -49,8 +49,9 @@ choices <- c(names(amr),'not available')  # Use your real variable
 
 # Define initial df
 initial_df <- data.frame(
-  man_vars = c('Specimen date', 'Date of data entry', 'Specimen type', "Organism", 'Age', 'Sex'),
-  my_dataset = factor(rep('please select', 6), levels = choices),
+  man_vars = c('Specimen date', 'Date of data entry', 'Specimen type', "Organism", 'Age',
+               'Sex', "Identification number"),
+  my_dataset = factor(rep('please select', 7), levels = choices),
   enter_country_name_or_code='',
   stringsAsFactors = FALSE
 )
