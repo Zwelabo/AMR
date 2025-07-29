@@ -1,5 +1,4 @@
-#load the packages
-source('scripts/install_packages_packman.R')
+
 
 
 # Functions ---------------------------------------------------------------
