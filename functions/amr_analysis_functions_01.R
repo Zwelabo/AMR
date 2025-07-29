@@ -1,3 +1,7 @@
+#load the packages
+source('scripts/install_packages_packman.R')
+
+
 # Functions ---------------------------------------------------------------
 
 # Function 1: Convert breakpoints to SIR
