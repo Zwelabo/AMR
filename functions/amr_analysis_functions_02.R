@@ -2,10 +2,40 @@ get_inputs_and_prelim_cleanup <- function(){
 
   # Load AMR data sources ---------------------------------------------------
 
+  ##adding folder_path
 
-  input_file <- list.files("test-data", pattern = "^AMR.*.xlsx")
+  if (rstudioapi::isAvailable()) {
+    folder_path <- rstudioapi::selectDirectory()
+    print(folder_path)
+  } else {
+    #  cat("Not running in RStudio.\n")
+    folder_path=NA
+  }
 
-  amr <- readxl::read_excel(file.path("test-data",input_file)) %>%
+
+  # Check if folder_path is NA
+  if (is.na(folder_path)) {
+
+    # Load tcltk package
+    if (!requireNamespace("tcltk", quietly = TRUE)) {
+      install.packages("tcltk")
+    }
+    library(tcltk)
+
+    # Prompt user to select a folder
+    folder_path <- tk_choose.dir(caption = "Select folder with your data files")
+
+    # Check what they selected
+    print(folder_path)
+
+  } else {
+    # Do nothing
+  }
+
+
+  input_file <- list.files(folder_path, pattern = "^AMR.*.xlsx")
+
+  amr <- readxl::read_excel(file.path(folder_path,input_file)) %>%
 
     dplyr::mutate(rid=row_number()) # assign distinct RIDs
 
@@ -24,7 +54,8 @@ get_inputs_and_prelim_cleanup <- function(){
     ) %>%
     mutate(specimen_date_cleaned = as.Date(as.POSIXct(New_date_posixct, origin = "1970-01-01", tz = "UTC")))
 
-  # Specify mandatory columns -----------------------------------------------
+
+   # Specify mandatory columns -----------------------------------------------
 
   man_cols = c("specimen_date_cleaned", # data specimen collected
 
