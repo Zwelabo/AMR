@@ -26,7 +26,9 @@ pacman::p_load(
   ggrepel,
   ggtext,
   BiocManager,
-  ggrepel
+  ggrepel,
+  rhandsontable,
+  shiny
 )
 
 

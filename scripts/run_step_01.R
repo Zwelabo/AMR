@@ -1,24 +1,8 @@
 ## Insert your country code ------------------------------------------------
 
 
+#specify country
 #cntry='TZ' # TZ for Tanzania
-
-
-# Specify organisms of interest -------------------------------------------
-
-#priority_bact_pathogens <- c(
-#  "Enterococcus faecium",
-#  "Staphylococcus aureus",
-#  "Klebsiella pneumoniae",
-#  "Acinetobacter baumannii",
-#  "Pseudomonas aeruginosa",
-#  "Escherichia coli",
-#  "Enterobacter cloacae complex",
-#  "Enterobacter aerogenes",
-#  "Enterobacter hormaechei"
-#)
-
-#print(priority_bact_pathogens)
 
 
 # Create output folder: Results -------------------------------------------
@@ -43,9 +27,6 @@ source(file.path("functions","amr_analysis_functions_02.R"))
 amr <- get_inputs_and_prelim_cleanup()
 
 # Begin analysis here -----------------------------------------------------
-
-# setwd(res_dir)
-
 
 
 
@@ -105,7 +86,7 @@ sir_outcomes_df_wide <- sir_outcomes_df %>%
 
   left_join(lkp_organisms, by=join_by("bacteria"=="mo")) %>%
 
-  dplyr::select(rid,uid,specimen_type,mo_organism=fullname,
+  dplyr::select(r_id,uid,specimen_type,mo_organism=fullname,
 
                 gramstain,test_type,guideline, everything())
 
@@ -118,7 +99,7 @@ sir_outcomes_df_wide <- sir_outcomes_df %>%
 #create an analysis dataframe
 
 an_df <- sir_outcomes_df_wide %>%
-  left_join(lkp_demographics %>% select(Age, Sex,rid), by='rid') %>%
+  left_join(lkp_demographics %>% select(Age, Sex,r_id), by='r_id') %>%
   ##cleanung Age cols
   mutate(Age_s=toupper(gsub("[[:digit:]]", "", Age)),
          Age_n= as.numeric(gsub("[^0-9.-]", "", Age)),
@@ -187,48 +168,6 @@ abg_df <- an_df %>%
   antibiogram()
 
 openxlsx::write.xlsx(abg_df,file = file.path("Results_AMR",paste0("National.antibiogram.results.",date_var,".xlsx")))  #Antibiograms for where n is at least 30
-
-
-## 2025-06-22: S. Kwenda: Commenting out this part because the
-## amr_grp1_analysis() function doesn't exist in the current repo
-#
-## Define parameters for subgroup analyses
-#par_df <- tibble(param=c('Age', 'Sex', 'Specimen Type'), var_name=c('Age_g', 'Sex', 'specimen_type')) %>%
-#
-#  mutate(id=paste0(param,var_name))
-#
-## Add/change pathogen and antibiotics of interests to obtain prevalance
-## rates and plots from the 2nd function (amr_grp1_analysis)
-#
-#for (i in par_df$id) {
-#
-#  par=par_df$param[par_df$id==i]
-#
-#  par_var_name=par_df$var_name[par_df$id==i]
-#
-#
-#  #E. COLI
-#  amr_grp1_analysis(
-#
-#    cntry = cntry,
-#
-#    par=par,
-#
-#    par_var_name=par_var_name,
-#
-#    org_name='Escherichia coli',
-#
-#    abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
-#
-#  )
-#
-#  #other bug-drug combinations to follow
-#
-#}
-## E. coli
-#
-#abs_ref <- c("AMP", "CFR", "CTX", "CAZ", "CIP", "GEN", "TOB", "MEC", "MEM", "NIT", "TZP", "TMP", "SXT")
-#amr_individual_pathogens(org_name, abs_ref, cntry, par, par_var_name)
 
 
 # Detailed analysis -------------------------------------------------------

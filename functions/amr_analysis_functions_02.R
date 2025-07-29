@@ -1,49 +1,24 @@
 get_inputs_and_prelim_cleanup <- function(){
 
+
+  ###call and rename stuff
+
+  cols_to_update <- read_excel(paste0(folder_path,"/select_amr_variables.xlsx"))
+
+  # Perform renaming
+  names(amr)[names(amr) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amr)[names(amr) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
+
+  #Country code
+  cntry=cols_to_update$enter_country_name_or_code[1]
+
+
+  #creating blank space holders for the unavailable cols
+  unavailable_cols=cols_to_update$man_vars[cols_to_update$my_dataset=='not available']
+
+  amr[unavailable_cols]=NA
   # Load AMR data sources ---------------------------------------------------
 
-  ##adding folder_path
-
-  if (rstudioapi::isAvailable()) {
-    folder_path <- rstudioapi::selectDirectory()
-    print(folder_path)
-  } else {
-    #  cat("Not running in RStudio.\n")
-    folder_path=NA
-  }
-
-
-  # Check if folder_path is NA
-  if (is.na(folder_path)) {
-
-    # Load tcltk package
-    if (!requireNamespace("tcltk", quietly = TRUE)) {
-      install.packages("tcltk")
-    }
-    library(tcltk)
-
-    # Prompt user to select a folder
-    folder_path <- tk_choose.dir(caption = "Select folder with your data files")
-
-    # Check what they selected
-    print(folder_path)
-
-  } else {
-    # Do nothing
-  }
-
-
-  input_file <- list.files(folder_path, pattern = "^AMR.*.xlsx")
-
-  amr <- readxl::read_excel(file.path(folder_path,input_file)) %>%
-
-    dplyr::mutate(rid=row_number()) # assign distinct RIDs
-
-  # Replace missing dates with dates e.g. from registration date col --------
-  excel_origin = "1899-12-30"
-  date_parse_vec = c("ymd HMS", "ymd HM", "mdy HMS", "dmy HMS", "ymd", "dmy", "mdy")
-
-  amr <- amr %>%
+   amr <- amr %>%
     mutate(
       Specimen_date_new = coalesce(`Specimen date`, `Date of data entry`)  ##careful here, some faciliteis do this in intervals
     ) %>%
@@ -79,7 +54,7 @@ get_inputs_and_prelim_cleanup <- function(){
 get_demographics <- function(df){
   # get demographics
 
-  demo_vec <- c("rid","Identification number","First name","Last name",
+  demo_vec <- c("r_id","Identification number","First name","Last name",
 
                 "Sex","Date of birth","Age","Age category","Date of admission","Reason")
 
@@ -96,7 +71,7 @@ get_facilities_data <- function(df){
 
   # get lab and facility information
 
-  facility_vec <- c("rid","Identification number","Laboratory","Institution",
+  facility_vec <- c("r_id","Identification number","Laboratory","Institution",
 
                     "Location","Location type","Department","Origin","Country")
 
@@ -113,7 +88,7 @@ get_facilities_data <- function(df){
 get_specimen_info <- function(df){
   # get specimens info
 
-  specimen_vec <- c("rid","Identification number","specimen_date_cleaned","Specimen number","Specimen type","Specimen type (Numeric)")
+  specimen_vec <- c("r_id","Identification number","specimen_date_cleaned","Specimen number","Specimen type","Specimen type (Numeric)")
 
   lkp_specimens <-  df %>%
 
@@ -124,19 +99,14 @@ get_specimen_info <- function(df){
 }
 
 
+abx_vec_dict <- c(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),
+                  str_split_i(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),'_',1),
+                  unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$AntiMicrobialAgent))
+
 
 get_test_results <- function(df){
 
-  # get test results
-
- # unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code)
-
-  abx_vec_dict <- c(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),
-               str_split_i(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),'_',1),
-               unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$AntiMicrobialAgent))
-
-
-  # map antibiotics
+   # map antibiotics
 
   abx_conformed <- as.ab(abx_vec_dict)
 
@@ -152,7 +122,7 @@ get_test_results <- function(df){
 
 
   # get antimicrobial results
-  main_vars <- c("rid","Identification number",man_cols)
+  main_vars <- c("r_id","Identification number",man_cols)
   amr_res <- df %>%
     dplyr::select(any_of(c(main_vars,abx_vec)))
 
@@ -183,13 +153,15 @@ get_test_results <- function(df){
 pivot_abx_results <- function(df){
   # Abx results preparation -------------------------------------------------
 
+  abx_vec <- names(df)[tolower(names(df)) %in% tolower(c(abx_vec_dict))]
+
   amr_res <- df %>%
 
     mutate(bacteria = as.mo(organism, info = TRUE)) %>%
 
     mutate(gramstain = mo_gramstain(bacteria)) %>%
 
-    dplyr::select(rid, uid, specimen_type,bacteria, organism, gramstain,everything()) %>%
+    dplyr::select(r_id, uid, specimen_type,bacteria, organism, gramstain,everything()) %>%
 
     mutate(across(any_of(abx_vec), ~as.character(.)))            #watch out for the uninterpretable bacteria and antibiotics
 
