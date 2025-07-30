@@ -1,27 +1,30 @@
+
+###call and rename stuff
+
+cols_to_update <- read_excel(paste0(folder_path,"/select_amr_variables.xlsx"))
+
+# Perform renaming
+names(amr)[names(amr) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amr)[names(amr) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
+
+#Country code
+cntry=cols_to_update$enter_country_name_or_code[1]
+
+
+#creating blank space holders for the unavailable cols
+unavailable_cols=cols_to_update$man_vars[cols_to_update$my_dataset=='not available']
+
+amr[unavailable_cols]=NA
+
+
 get_inputs_and_prelim_cleanup <- function(){
 
-
-  ###call and rename stuff
-
-  cols_to_update <- read_excel(paste0(folder_path,"/select_amr_variables.xlsx"))
-
-  # Perform renaming
-  names(amr)[names(amr) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amr)[names(amr) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
-
-  #Country code
-  cntry=cols_to_update$enter_country_name_or_code[1]
-
-
-  #creating blank space holders for the unavailable cols
-  unavailable_cols=cols_to_update$man_vars[cols_to_update$my_dataset=='not available']
-
-  amr[unavailable_cols]=NA
   # Load AMR data sources ---------------------------------------------------
 
    amr <- amr %>%
     mutate(
       Specimen_date_new = coalesce(`Specimen date`, `Date of data entry`)  ##careful here, some faciliteis do this in intervals
     ) %>%
+     dplyr::mutate(r_id=row_number()) %>%  # assign distinct r_ids
     mutate(numeric_value = as.numeric(Specimen_date_new)) %>%
     mutate(New_date_posixct = ifelse(is.na(numeric_value),
                                      parse_date_time(Specimen_date_new, orders = date_parse_vec),
