@@ -1,0 +1,8 @@
+"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
+"1","Serratia","50-64","CAZ",2,0,0,"Ceftazidime","50-64"
+"2","Serratia","50-64","CRO",2,0,0,"Ceftriaxone","50-64"
+"3","Serratia","50-64","CTX",2,0,0,"Cefotaxime","50-64"
+"4","Serratia","50-64","MEM",2,0,0,"Meropenem","50-64"
+"5","Serratia","50-64","NAL",1,0,0,"Nalidixic acid","50-64"
+"6","Serratia","50-64","NOR",2,0,0,"Norfloxacin","50-64"
+"7","Serratia","50-64","TZP",3,0,0,"Piperacillin/tazobactam","50-64"

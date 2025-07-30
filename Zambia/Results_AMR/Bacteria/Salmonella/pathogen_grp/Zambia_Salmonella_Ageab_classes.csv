@@ -1,0 +1,6 @@
+"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
+"1","Salmonella","20-49","Beta-lactams/penicillins",1,1,1,"Beta-lactams/penicillins","20-49"
+"2","Salmonella","20-49","Carbapenems",1,1,1,"Carbapenems","20-49"
+"3","Salmonella","20-49","Cephalosporins (3rd gen.)",1,1,1,"Cephalosporins (3rd gen.)","20-49"
+"4","Salmonella","50-64","Carbapenems",1,0,0,"Carbapenems","50-64"
+"5","Salmonella","50-64","Cephalosporins (3rd gen.)",1,1,1,"Cephalosporins (3rd gen.)","50-64"

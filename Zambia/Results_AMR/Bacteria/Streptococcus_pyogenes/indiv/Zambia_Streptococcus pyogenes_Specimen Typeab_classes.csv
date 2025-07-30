@@ -1,0 +1,6 @@
+"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
+"1","Streptococcus pyogenes","Pus","Beta-lactams/penicillins",2,0,0,"Beta-lactams/penicillins","Pus"
+"2","Streptococcus pyogenes","Pus","Cephalosporins (3rd gen.)",2,1,0.5,"Cephalosporins (3rd gen.)","Pus"
+"3","Streptococcus pyogenes","Pus","Glycopeptides",2,0,0,"Glycopeptides","Pus"
+"4","Streptococcus pyogenes","Pus","Macrolides/lincosamides",2,0,0,"Macrolides/lincosamides","Pus"
+"5","Streptococcus pyogenes","Pus","Oxazolidinones",2,0,0,"Oxazolidinones","Pus"

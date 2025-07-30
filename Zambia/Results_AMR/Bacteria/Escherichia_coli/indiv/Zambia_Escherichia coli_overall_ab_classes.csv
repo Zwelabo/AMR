@@ -1,0 +1,8 @@
+"","mo_organism","ab_class","n","r","total_R","ab_name"
+"1","Escherichia coli","Aminoglycosides",52,9,0.173076923076923,"Aminoglycosides"
+"2","Escherichia coli","Beta-lactams/penicillins",74,53,0.716216216216216,"Beta-lactams/penicillins"
+"3","Escherichia coli","Carbapenems",74,6,0.0810810810810811,"Carbapenems"
+"4","Escherichia coli","Cephalosporins (1st gen.)",14,10,0.714285714285714,"Cephalosporins (1st gen.)"
+"5","Escherichia coli","Cephalosporins (3rd gen.)",81,56,0.691358024691358,"Cephalosporins (3rd gen.)"
+"6","Escherichia coli","Cephalosporins (4th gen.)",36,17,0.472222222222222,"Cephalosporins (4th gen.)"
+"7","Escherichia coli","Quinolones",46,29,0.630434782608696,"Quinolones"

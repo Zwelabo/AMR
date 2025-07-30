@@ -1,0 +1,8 @@
+"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
+"1","Streptococcus pyogenes","Pus","AMP",4,0,0,"Ampicillin","Pus"
+"2","Streptococcus pyogenes","Pus","AZM",2,0,0,"Azithromycin","Pus"
+"3","Streptococcus pyogenes","Pus","CLI",3,0,0,"Clindamycin","Pus"
+"4","Streptococcus pyogenes","Pus","CRO",2,2,1,"Ceftriaxone","Pus"
+"5","Streptococcus pyogenes","Pus","CTX",2,0,0,"Cefotaxime","Pus"
+"6","Streptococcus pyogenes","Pus","LNZ",2,0,0,"Linezolid","Pus"
+"7","Streptococcus pyogenes","Pus","VAN",2,0,0,"Vancomycin","Pus"

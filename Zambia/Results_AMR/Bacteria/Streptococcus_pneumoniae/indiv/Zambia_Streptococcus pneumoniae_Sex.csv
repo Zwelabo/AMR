@@ -1,0 +1,6 @@
+"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
+"1","Streptococcus pneumoniae","M","AMP",2,2,1,"Ampicillin","M"
+"2","Streptococcus pneumoniae","M","CLI",3,0,0,"Clindamycin","M"
+"3","Streptococcus pneumoniae","M","CRO",2,2,1,"Ceftriaxone","M"
+"4","Streptococcus pneumoniae","M","LNZ",1,0,0,"Linezolid","M"
+"5","Streptococcus pneumoniae","M","VAN",3,0,0,"Vancomycin","M"

@@ -1,0 +1,8 @@
+"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
+"1","Streptococcus pneumoniae","Pus","AMP",2,2,1,"Ampicillin","Pus"
+"2","Streptococcus pneumoniae","Pus","CLI",1,0,0,"Clindamycin","Pus"
+"3","Streptococcus pneumoniae","Pus","CRO",2,2,1,"Ceftriaxone","Pus"
+"4","Streptococcus pneumoniae","Pus","LNZ",1,0,0,"Linezolid","Pus"
+"5","Streptococcus pneumoniae","Pus","VAN",1,0,0,"Vancomycin","Pus"
+"6","Streptococcus pneumoniae","Sputum","CLI",2,0,0,"Clindamycin","Sputum"
+"7","Streptococcus pneumoniae","Sputum","VAN",2,0,0,"Vancomycin","Sputum"

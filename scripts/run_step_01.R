@@ -1,8 +1,11 @@
 ## Insert your country code ------------------------------------------------
 
 
-#specify country
-#cntry='TZ' # TZ for Tanzania
+
+# Load functions ----------------------------------------------------------
+
+source(file.path("functions","amr_analysis_functions_01.R"))
+source(file.path("functions","amr_analysis_functions_02.R"))
 
 
 # Create output folder: Results -------------------------------------------
@@ -19,10 +22,6 @@ if (!dir.exists(res_dir)){
 date_var <- as.Date(date(), format = "%a %b %d %H:%M:%S %Y")
 
 
-# Load functions ----------------------------------------------------------
-
-source(file.path("functions","amr_analysis_functions_01.R"))
-source(file.path("functions","amr_analysis_functions_02.R"))
 
 amr <- get_inputs_and_prelim_cleanup()
 
@@ -163,7 +162,25 @@ abg_df <- an_df %>%
 
   antibiogram()
 
-openxlsx::write.xlsx(abg_df,file = file.path(paste0(cntry,"/Results_AMR/National.antibiogram.results.",date_var,".xlsx")))  #Antibiograms for where n is at least 30
+# Creating a workbook and worksheet
+wb <- createWorkbook()
+addWorksheet(wb, "antibiogram")
+
+# Write data to Excel
+writeData(wb, sheet = "antibiogram", x = abg_df)
+
+# Apply color scale to 'Score' column (column B)
+conditionalFormatting(
+  wb,
+  sheet = "antibiogram",
+  cols = 2:length(names(abg_df)),
+  rows = 2:(nrow(abg_df)+1),  # +1 to account for header
+  style = c("red", "yellow", "green"),
+  type = "colourScale"
+)
+
+# Save to file
+saveWorkbook(wb, file.path(paste0(cntry,"/Results_AMR/National.antibiogram.results.",date_var,".xlsx")), overwrite = TRUE)
 
 
 # Detailed analysis -------------------------------------------------------

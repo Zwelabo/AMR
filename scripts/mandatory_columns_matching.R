@@ -34,9 +34,7 @@ if (rstudioapi::isAvailable()) {
 
 input_file <- list.files(folder_path, pattern = "^AMR.*.xlsx")
 
-amr <- readxl::read_excel(file.path(folder_path,input_file)) %>%
-
-  dplyr::mutate(r_id=row_number()) # assign distinct r_ids
+amr <- readxl::read_excel(file.path(folder_path,input_file))
 
 # Replace missing dates with dates e.g. from registration date col --------
 excel_origin = "1899-12-30"

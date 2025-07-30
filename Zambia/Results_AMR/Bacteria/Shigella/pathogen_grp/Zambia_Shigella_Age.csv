@@ -1,0 +1,4 @@
+"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
+"1","Shigella","20-49","CHL",1,0,0,"Chloramphenicol","20-49"
+"2","Shigella","20-49","IPM",2,0,0,"Imipenem","20-49"
+"3","Shigella","20-49","MEM",2,0,0,"Meropenem","20-49"

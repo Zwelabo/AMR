@@ -1,0 +1,7 @@
+"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
+"1","Enterococcus faecium","F","Beta-lactams/penicillins",9,4,0.444444444444444,"Beta-lactams/penicillins","F"
+"2","Enterococcus faecium","F","Glycopeptides",10,4,0.4,"Glycopeptides","F"
+"3","Enterococcus faecium","F","Quinolones",6,4,0.666666666666667,"Quinolones","F"
+"4","Enterococcus faecium","M","Beta-lactams/penicillins",6,2,0.333333333333333,"Beta-lactams/penicillins","M"
+"5","Enterococcus faecium","M","Glycopeptides",6,2,0.333333333333333,"Glycopeptides","M"
+"6","Enterococcus faecium","M","Quinolones",4,3,0.75,"Quinolones","M"

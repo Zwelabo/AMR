@@ -1,0 +1,6 @@
+"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
+"1","Streptococcus pneumoniae","Pus","Beta-lactams/penicillins",1,1,1,"Beta-lactams/penicillins","Pus"
+"2","Streptococcus pneumoniae","Pus","Cephalosporins (3rd gen.)",1,1,1,"Cephalosporins (3rd gen.)","Pus"
+"3","Streptococcus pneumoniae","Pus","Glycopeptides",1,0,0,"Glycopeptides","Pus"
+"4","Streptococcus pneumoniae","Pus","Oxazolidinones",1,0,0,"Oxazolidinones","Pus"
+"5","Streptococcus pneumoniae","Sputum","Glycopeptides",2,0,0,"Glycopeptides","Sputum"
