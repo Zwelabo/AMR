@@ -28,7 +28,8 @@ pacman::p_load(
   BiocManager,
   ggrepel,
   rhandsontable,
-  shiny
+  shiny,
+  writexl
 )
 
 
