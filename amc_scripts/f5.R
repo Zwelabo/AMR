@@ -278,16 +278,16 @@ cat('Analysis of antibiotic consumption by route done...\n')
 message('Analysis of antibiotic consumption by route done...')
 
 ##Consumption trend
-amc_dir_trend <- file.path(cntry,"Results_AMC",'Trend')
-
-if(!dir.exists(amc_dir_trend)){dir.create(amc_dir_trend, recursive = T)}
-
-
-amc_trend <- amc %>% group_by(y_month_date, Class, year) %>%
-  summarise(  tot_ddd=sum(ddd_equivalent)) %>%
-  ungroup() %>%
-  mutate(tot_did=tot_ddd*1000/365/pop) %>%
-  arrange(desc(tot_ddd))
+# amc_dir_trend <- file.path(cntry,"Results_AMC",'Trend')
+#
+# if(!dir.exists(amc_dir_trend)){dir.create(amc_dir_trend, recursive = T)}
+#
+#
+# amc_trend <- amc %>% group_by(y_month_date, Class, year) %>%
+#   summarise(  tot_ddd=sum(ddd_equivalent)) %>%
+#   ungroup() %>%
+#   mutate(tot_did=tot_ddd*1000/365/pop) %>%
+#   arrange(desc(tot_ddd))
 
 
 #Visuals
