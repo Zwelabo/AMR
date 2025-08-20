@@ -37,16 +37,36 @@ empty_amc_df <- data.frame(Required_variables=cols,
 
 
 # Match column classes of df2 to df1 and allow missing columns
+# Match column classes of df2 to df1 and allow missing columns
+library(purrr)
+library(dplyr)
+
+# Match column classes of df2 to df1 and allow missing columns
 match_col_classes <- function(df1, df2) {
+  # Handle completely empty df2
+  if (nrow(df2) == 0 && ncol(df2) == 0) {
+    df2 <- as.data.frame(matrix(nrow = 0, ncol = 0))
+  }
+
   # Add missing columns to df2
   missing_cols <- setdiff(names(df1), names(df2))
   for (col in missing_cols) {
     class_type <- class(df1[[col]])[1]
-    df2[[col]] <- if (class_type == "numeric") NA_real_ else
-      if (class_type == "integer") NA_integer_ else
-        if (class_type == "character") NA_character_ else
-          if (class_type == "factor") factor(NA, levels = levels(df1[[col]])) else
-            NA
+    df2[[col]] <- if (nrow(df2) == 0) {
+      # special handling: zero-length vector of correct type
+      if (class_type == "numeric") numeric(0) else
+        if (class_type == "integer") integer(0) else
+          if (class_type == "character") character(0) else
+            if (class_type == "factor") factor(levels = levels(df1[[col]])) else
+              logical(0)
+    } else {
+      # df2 has rows → fill with NA of correct type
+      if (class_type == "numeric") rep(NA_real_, nrow(df2)) else
+        if (class_type == "integer") rep(NA_integer_, nrow(df2)) else
+          if (class_type == "character") rep(NA_character_, nrow(df2)) else
+            if (class_type == "factor") factor(rep(NA, nrow(df2)), levels = levels(df1[[col]])) else
+              rep(NA, nrow(df2))
+    }
   }
 
   # Reorder columns to match df1
@@ -65,6 +85,7 @@ match_col_classes <- function(df1, df2) {
               .x
     }
   )
+
   names(df2_matched) <- names(df1)
   df2_matched
 }
