@@ -326,7 +326,7 @@ server <- function(input, output, session) {
     step5_data(df)
   })
   output$console_5 <- renderText({ step_logs[[5]]() })
-  output$download_5 <- downloadHandler(filename = "update_AMC_classes.xlsx",
+  output$download_5 <- downloadHandler(filename = "updated_AMC_classes.xlsx",
                                        content = function(file) writexl::write_xlsx(step5_data(), file))
 
 
