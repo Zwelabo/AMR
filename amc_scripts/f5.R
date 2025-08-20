@@ -141,7 +141,8 @@ amc %>% group_by(year, antibiotic_molecules) %>%
   group_by(year) %>%
   mutate(annual_totals=sum(tot_ddd),
          ddd_dist=round(tot_ddd*100/annual_totals,2),
-         molecule=factor(antibiotic_molecules, levels=unique(.$antibiotic_molecules))) %>%
+         molecule=factor(antibiotic_molecules, levels=unique(.$antibiotic_molecules)),
+         molecule=str_to_title(molecule)) %>%
   arrange(desc(ddd_dist)) -> molecule_temp
 
 
@@ -199,7 +200,7 @@ plt_molecule_sin <- ggplot(amc_cats_molecule#%>% filter(year==y)
   labs(x='', y='DDD/1000 Inhabitants/day')+
   scale_fill_brewer(palette = "Set1")+
   theme_classic()+
-  theme(axis.text.x = element_text(angle = 60, hjust = .5,vjust=.5),legend.title = element_blank())
+  theme(axis.text.x = element_text(angle = 60, hjust = 1,vjust=1),legend.title = element_blank())
 
 ggsave(paste0(amc_dir_molecule,'/','AMC_molecules_single_DID.png'),plt_molecule_sin, width=8, height=8, units="in", dpi=300)
 
@@ -228,7 +229,8 @@ amc %>% group_by(year, route) %>%
   group_by(year) %>%
   mutate(annual_totals=sum(tot_ddd),
          ddd_dist=round(tot_ddd*100/annual_totals,2),
-         route=factor(route, levels=unique(.$route))) %>%
+         route=factor(route, levels=unique(.$route)),
+         route=str_to_title(route)) %>%
   arrange(desc(ddd_dist)) -> s_route_temp
 
 

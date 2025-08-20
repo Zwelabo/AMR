@@ -91,6 +91,18 @@ plt_class_tot <- ggplot(amc_cats_class#%>% filter(year==y)
 ggsave(paste0(amc_dir_class,'/','AMC_classes.png'),plt_class_tot, width=8, height=8, units="in", dpi=300)
 
 
+plt_class_sin <- ggplot(amc_cats_class#%>% filter(year==y)
+                           , aes(x=class, y=tot_did, fill=as.factor(year)))+
+  geom_bar(stat = 'identity',  width=.8, position = position_dodge())+
+  labs(x='', y='DDD/1000 Inhabitants/day')+
+  scale_fill_brewer(palette = "Set1")+
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1,vjust=1),legend.title = element_blank())
+
+ggsave(paste0(amc_dir_class,'/','AMC_single_classes.png'),plt_class_sin, width=8, height=8, units="in", dpi=300)
+
+
+
 
 plt_aware_dist <- ggplot(amc_cats_aware %>% drop_na(aware_cats)#%>% filter(year==y)
                          , aes(x=as.factor(year), y=dist, fill=aware_cats))+
