@@ -6,6 +6,8 @@ source("amc_scripts/f1.R")
 
 
 ui <- fluidPage(
+  theme = shinytheme("cerulean"),
+
   titlePanel("AMC Data Analysis - MAAP2"),
 
   tabsetPanel(
@@ -58,7 +60,7 @@ ui <- fluidPage(
 
     # Step 3
     tabPanel("Step 3",
-             h3("Return unprocessed data"),
+             h3("Updated DDD Information"),
 
              rHandsontableOutput("table_3"),
              br(),
@@ -82,8 +84,8 @@ ui <- fluidPage(
              rHandsontableOutput("table_4"),
              br(),
           #   downloadButton("download_4", "Download Modified Data"),
-             br(),br(),
-             actionButton("run_script_4", "Run AMC Analysis on the processed files"),
+             #br(),br(),
+             actionButton("run_script_4", "Begin analysis on the processed files"),
              br(),br(),
             verbatimTextOutput("console_4"),
              actionButton("prev_4", "Previous"),
@@ -93,20 +95,22 @@ ui <- fluidPage(
 
     # Step 5
     tabPanel("Step 5",
-             h3("Generate plots"),
+             h3("Update class information"),
+             helpText(paste0("Please provide antibiotic classes based on column 1")),
 
              rHandsontableOutput("table_5"),
              br(),
-             downloadButton("download_5", "Download Modified Data"),
+             downloadButton("download_5", "Save Data"),
              helpText(paste0("Save in ", amc_updates_dir,"/")),
 
              br(),br(),
              actionButton("run_script_5", "Finalize plots"),
              br(),br(),
              verbatimTextOutput("console_5"),
-             actionButton("prev_5", "Previous"),
-             checkboxInput("completed_5", "I have completed this step"),
-             actionButton("next_5", "Next")
+             actionButton("prev_5", "Previous")
+             #,
+            # checkboxInput("completed_5", "I have completed this step"),
+            # actionButton("next_5", "Next")
     )#,
 
     # # Step 6
@@ -271,7 +275,7 @@ server <- function(input, output, session) {
     if(isTRUE(input$completed_3)) {
       updateTabsetPanel(session, "steps", "Step 4")
       # Load step4 data only now
-      step4_data()
+      step4_data(ddd_updates)
     }
   })
   output$table_4 <- renderRHandsontable({
@@ -284,7 +288,7 @@ server <- function(input, output, session) {
     df <- step4_data()
     script_file <- "amc_scripts/f5.R"
     if(file.exists(script_file)) {
-      msg <- capture.output(tryCatch(source(script_file, local = TRUE),
+      msg <- capture.output(tryCatch(source(script_file, local = .GlobalEnv),
                                      error = function(e) cat("Error:", e$message)), type = "output")
       step_logs[[4]](paste(msg, collapse="\n"))
     } else step_logs[[4]]("No script found for Step 4")
@@ -313,9 +317,9 @@ server <- function(input, output, session) {
   observe({ req(input$table_5); step5_data(hot_to_r(input$table_5)) })
   observeEvent(input$run_script_5, {
     df <- step5_data()
-    script_file <- "amc_scripts/f5.R"
+    script_file <- "amc_scripts/f6.R"
     if(file.exists(script_file)) {
-      msg <- capture.output(tryCatch(source(script_file, local = TRUE),
+      msg <- capture.output(tryCatch(source(script_file, local = .GlobalEnv),
                                      error = function(e) cat("Error:", e$message)), type = "output")
       step_logs[[5]](paste(msg, collapse="\n"))
     } else step_logs[[5]]("No script found for Step 5")

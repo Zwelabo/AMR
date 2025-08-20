@@ -121,6 +121,9 @@ ggsave(paste0(amc_dir,'/','AMC_aware.png'),plt_aware_dist, width=8, height=8, un
 #}
 
 cat('Analysis Completed...\n')
-message('Analysis Completed...')
+message('Analysis Successfully Completed...')
+
+cat(paste0('View all outputs in ', amc_dir))
+message(paste0('View all outputs in ', amc_dir))
 
 

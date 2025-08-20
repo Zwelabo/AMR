@@ -1,5 +1,7 @@
-cat('Beginning the analysis...\n'); cat(paste("Analysis proceeding with",length(unique(amc_r1$uid))- length(unique(amc_dataset_comb2$uid)), 'records\n'))
-message('Beginning the analysis...\n'); message(paste("Analysis proceeding with",length(unique(amc_r1$uid))- length(unique(amc_dataset_comb2$uid)), 'records\n'))
+cat('Beginning the analysis...\n')
+cat(paste("Analysis proceeding with",(length(unique(amc_r1$uid))- length(unique(amc_dataset_comb2$uid))), 'records\n'))
+message('Beginning the analysis...')
+message(paste("Analysis proceeding with",(length(unique(amc_r1$uid))- length(unique(amc_dataset_comb2$uid))), 'records'))
 
 
 #calculating the consumption (DiD)
@@ -318,6 +320,5 @@ unclassified_abs <- amc %>% left_join(class_names, by=('antibiotic_names')) %>%
   distinct(antibiotic_names, .keep_all=T)
 
 
-cat('Analysis of trends done...\n');
-
-message('Analysis of trends done...\n');
+cat('Analysis of trends done...\n')
+message('Analysis of trends done...')
