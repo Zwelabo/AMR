@@ -24,7 +24,7 @@ date_parse_vec = c("ymd HMS", "ymd HM", "mdy HMS", "dmy HMS", "ymd", "dmy", "mdy
 
 ###matching the cols when combining with reduce
 # Sample vector
-choices1 <- c(names(amr),'not available')  # Use your real variable
+choices1 <- sort(c(names(amr),'not available'))  # Use your real variable
 
 # Define initial df
 initial_df <- data.frame(

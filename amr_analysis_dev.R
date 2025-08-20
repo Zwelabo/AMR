@@ -174,7 +174,7 @@ server <- function(input, output, session) {
     step1_data(df)
   })
   output$console_1 <- renderText({ step_logs[[1]]() })
-  output$download_1 <- downloadHandler(filename = "select_amc_variables.xlsx",
+  output$download_1 <- downloadHandler(filename = "select_amr_variables.xlsx",
                                        content = function(file) writexl::write_xlsx(step1_data(), file))
 
   # # ---- Step 2 lazy-load ----

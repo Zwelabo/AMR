@@ -102,9 +102,9 @@ get_specimen_info <- function(df){
 }
 
 
-abx_vec_dict <- c(unique(readxl::read_excel(paste0(amr_updates_dir,'/Antibiotic_Codes.xlsx'))$Code),
-                  str_split_i(unique(readxl::read_excel(paste0(amr_updates_dir,'/Antibiotic_Codes.xlsx'))$Code),'_',1),
-                  unique(readxl::read_excel(paste0(amr_updates_dir,'/Antibiotic_Codes.xlsx'))$AntiMicrobialAgent))
+abx_vec_dict <- c(unique(readxl::read_excel(paste0('amr_resources/Antibiotic_Codes.xlsx'))$Code),
+                  str_split_i(unique(readxl::read_excel(paste0('amr_resources/Antibiotic_Codes.xlsx'))$Code),'_',1),
+                  unique(readxl::read_excel(paste0('amr_resources/Antibiotic_Codes.xlsx'))$AntiMicrobialAgent))
 
 
 get_test_results <- function(df){
