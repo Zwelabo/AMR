@@ -35,6 +35,39 @@ empty_amc_df <- data.frame(Required_variables=cols,
                            Country=c(rep('',7)),
                            Population=c(rep('',7)))
 
+
+# Match column classes of df2 to df1 and allow missing columns
+match_col_classes <- function(df1, df2) {
+  # Add missing columns to df2
+  missing_cols <- setdiff(names(df1), names(df2))
+  for (col in missing_cols) {
+    class_type <- class(df1[[col]])[1]
+    df2[[col]] <- if (class_type == "numeric") NA_real_ else
+      if (class_type == "integer") NA_integer_ else
+        if (class_type == "character") NA_character_ else
+          if (class_type == "factor") factor(NA, levels = levels(df1[[col]])) else
+            NA
+  }
+
+  # Reorder columns to match df1
+  df2 <- df2[, names(df1), drop = FALSE]
+
+  # Match classes
+  df2_matched <- map2_dfc(
+    df2,
+    df1,
+    ~ {
+      target_class <- class(.y)[1]
+      if (target_class == "numeric") as.numeric(.x) else
+        if (target_class == "integer") as.integer(.x) else
+          if (target_class == "character") as.character(.x) else
+            if (target_class == "factor") factor(.x, levels = levels(.y)) else
+              .x
+    }
+  )
+  names(df2_matched) <- names(df1)
+  df2_matched
+}
 #
 bind_rows_match_classes <- function(dfs) {
   Reduce(function(x, y) bind_rows(x, match_col_classes(x, y)), dfs)
