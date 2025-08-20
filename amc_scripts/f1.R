@@ -35,6 +35,10 @@ empty_amc_df <- data.frame(Required_variables=cols,
                            Country=c(rep('',7)),
                            Population=c(rep('',7)))
 
+#
+bind_rows_match_classes <- function(dfs) {
+  Reduce(function(x, y) bind_rows(x, match_col_classes(x, y)), dfs)
+}
 
 #create a folder to hold the temporary files
 #create the results directory

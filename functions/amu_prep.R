@@ -18,16 +18,15 @@ inhibitors <- c(
 )
 
 other_non_antibiotics <- c('diloxanide', 'praziquantel', 'antimalarial',
-                           'ors', 'i.v', 'tabs', 'cap', 'syrup')  #when the predicted name is not correct, the xab_name should be added in this list to ease analysis going forward
+                           'ors', 'i.v', 'tabs', 'cap', 'syrup', 'acid', 'other'
+                           )  #when the predicted name is not correct, the xab_name should be added in this list to ease analysis going forward
 
 
 
 #atc molecules
-atcs_cleaned <- Reduce(bind_rows,
-                       list(read_excel('test-data/ab_molecules.xlsx'),
-                            read_excel('test-data/updating_ab_molecules.xlsx'))) %>%
-  mutate(antibiotic_name=tolower(trimws(antibiotic_name))) %>%
-  distinct(antibiotic_name, .keep_all = T)
+atcs_cleaned <- read_excel('test-data/ab_molecules.xlsx') %>%
+  mutate(original_entry=tolower(trimws(original_entry))) %>%
+  distinct(original_entry, .keep_all = T)
 
 
 ##
@@ -56,7 +55,7 @@ amu_dataset <- amu_raw %>%
     ),
     antibiotic_copy=gsub('[-+_/,&]','_s_',tolower(Antimicrobial_Name)),
     antibiotic_copy=gsub('ampiclox','ampicillin and cloxacillin and',tolower(antibiotic_copy)),  #may also need to do this for amoxiclav
-    antibiotic_copy=gsub('and','_s_',tolower(antibiotic_copy)),
+    antibiotic_copy=gsub('and ','_s_',tolower(antibiotic_copy)),
     uid=1:nrow(.),                                    #adding an identifer to sort out the mixed molecules
     # Update IndicationType values
     IndicationType = case_when(
@@ -85,7 +84,7 @@ amu_dataset <- amu_raw %>%
 
 #analysis scheme.
 #how many antibiotics are in both datasets?
-amu_dataset_match1 <- subset(amu_dataset, tolower(amu_dataset$Antimicrobial_Name) %in% atcs_cleaned$antibiotic_name)
+amu_dataset_match1 <- subset(amu_dataset, tolower(amu_dataset$Antimicrobial_Name) %in% atcs_cleaned$original_entry)
 
 
 # Step 1: Determine the max number of parts after splitting
@@ -101,7 +100,7 @@ amu_dataset_match_prep <- subset(amu_dataset, !amu_dataset$uid %in% amu_dataset_
   pivot_longer(cols = starts_with('name'), values_to = 'xab_name') %>%
   drop_na()
 
-amu_dataset_match2 <- subset(amu_dataset_match_prep, trimws(amu_dataset_match_prep$xab_name) %in% atcs_cleaned$antibiotic_name)
+amu_dataset_match2 <- subset(amu_dataset_match_prep, trimws(amu_dataset_match_prep$xab_name) %in% atcs_cleaned$original_entry)
 
 
 amu_dataset_match_prep2 <- subset(amu_dataset_match_prep, !amu_dataset_match_prep$uid %in% amu_dataset_match2$uid) %>%
@@ -113,7 +112,7 @@ amu_dataset_match_prep2 <- subset(amu_dataset_match_prep, !amu_dataset_match_pre
   drop_na()%>%
   filter(!xab_name %in% c('other', 'oral', 'acid')) #%>%     #update with new datasets
 #
-amu_dataset_match3 <- subset(amu_dataset_match_prep2, trimws(amu_dataset_match_prep2$xab_name) %in% atcs_cleaned$antibiotic_name)
+amu_dataset_match3 <- subset(amu_dataset_match_prep2, trimws(amu_dataset_match_prep2$xab_name) %in% atcs_cleaned$original_entry)
 
 
 ##getting names from the AMR package
@@ -136,7 +135,7 @@ amu_dataset_match4<-amu_dataset_prep3%>%
            sep = "/", fill = "right") %>%
   pivot_longer(cols = starts_with('name'), values_to = 'xab_name') %>%
   drop_na() %>%
-  filter(tolower(xab_name) %in% atcs_cleaned$antibiotic_name) %>%
+  filter(tolower(xab_name) %in% atcs_cleaned$original_entry) %>%
   mutate(corrected='yes')  ##to work with only the reported data, this label can be used to filter
 
 
@@ -150,7 +149,7 @@ working_df_molecule <- Reduce(bind_rows,
   mutate(type='antibiotic',
          xab_name=tolower(trimws(xab_name))) %>%
   right_join(amu_dataset, by=c('uid', 'Antimicrobial_Name')) %>%
-  left_join(atcs_cleaned, by=c('xab_name'='antibiotic_name'))
+  left_join(atcs_cleaned, by=c('xab_name'='original_entry'))
 
 #working_df_demographics <- working_df_molecule %>% distinct(uid, .keep_all = T)
 

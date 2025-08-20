@@ -21,7 +21,7 @@ final_matched_df <- lookup_df[!is.na(lookup_df$antibiotic_name), ] %>%
          Verdict=as.character(Verdict)) %>%
   filter(grepl('have|corr', Verdict, ignore.case=T))
 
-atcs_cleaned_update <- Reduce(bind_rows, list(atcs_cleaned, final_matched_df)) %>%
+atcs_cleaned_update <-bind_rows_match_classes(list(atcs_cleaned, final_matched_df)) %>%
   distinct(original_entry, .keep_all = T)
 
 #updating the atcs cleaned file

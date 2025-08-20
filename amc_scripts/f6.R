@@ -12,8 +12,7 @@ if (file.exists(file_path)) {
   message("File not found — amc_class_updates")
 }
 
-amc_class_updates=Reduce(bind_rows,
-                         list(class_names,amc_class_updates)) %>%
+amc_class_updates=bind_rows_match_classes(list(class_names,amc_class_updates)) %>%
   filter(!is.na(Class))
 
 amc %>% left_join(amc_class_updates, by=('antibiotic_names')) %>%
@@ -34,7 +33,7 @@ amc %>% left_join(amc_class_updates, by=('antibiotic_names')) %>%
           midpoint=ddd_dist/2+lag(cum))-> class_temp
 
 
-amc_cats_class <- Reduce( rbind, list(class_temp %>% filter(ddd_dist >= 1),
+amc_cats_class <- bind_rows_match_classes(list(class_temp %>% filter(ddd_dist >= 1),
                                       class_temp %>% filter(ddd_dist < 1) %>%   ##creating Others if less than 1%
                                         summarise(ddd_dist=sum(ddd_dist),
                                                   tot_did=sum(tot_did),

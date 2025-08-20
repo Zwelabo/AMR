@@ -16,8 +16,12 @@ if (file.exists(file_path)) {
 
 ddd_updates=ddd_updates %>% mutate(name_route=paste0(`ATC level name`, '_',tolower(Adm.R)))
 
-##CONTINUE from here
-ddd_ref_update <- Reduce(bind_rows, list(ddd_ref,ddd_updates %>% filter(DDD!=' ')))
+
+
+
+ddd_ref_update <- bind_rows_match_classes(list(ddd_ref,ddd_updates %>% filter(DDD!=' ')))
+
+
 
 
 #updating the atcs cleaned file
