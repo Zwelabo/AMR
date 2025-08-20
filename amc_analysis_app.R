@@ -275,7 +275,7 @@ server <- function(input, output, session) {
     if(isTRUE(input$completed_3)) {
       updateTabsetPanel(session, "steps", "Step 4")
       # Load step4 data only now
-      step4_data(ddd_updates)
+      step4_data()
     }
   })
   output$table_4 <- renderRHandsontable({
