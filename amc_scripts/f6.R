@@ -3,7 +3,7 @@
 cat('Beginning AMC class analysis...\n')
 message('Beginning AMC class analysis...')
 
-file.path(amc_updates_dir,'updated_AMC_classes.xlsx')
+file_path <- file.path(amc_updates_dir,'updated_AMC_classes.xlsx')
 
 if (file.exists(file_path)) {
   amc_class_updates <- read.xlsx(file_path)# or read.csv, fread, etc.
