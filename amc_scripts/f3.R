@@ -33,7 +33,7 @@ final_unmatched_df <- lookup_df[is.na(lookup_df$Verdict), ] %>%
   filter(nchar(original_entry)>3)
 
 ##
-combined_matched_df <- Reduce(bind_rows, list(final_matched_df, matches_df)) %>%
+combined_matched_df <- bind_rows_match_classes(list(final_matched_df, matches_df)) %>%
   filter(!(antibiotic_name %in% tolower(inhibitors)))
 
 
@@ -170,8 +170,7 @@ ddd_updates <- amc_dataset_comb_r %>% select(`ATC level name`=antibiotic_molecul
   mutate(aware_cats= ' ',DDD=' ', Unit=' ') %>%
   filter(!is.na(`ATC level name`))
 
-ddd_updates <- Reduce(bind_rows,
-                      list(ddd_updates, updates_comb)) %>%
+ddd_updates <- bind_rows_match_classes(list(ddd_updates, updates_comb)) %>%
   filter(!(`ATC level name` %in% exclude_extra))
 
 cat('Done!...')
