@@ -318,6 +318,6 @@ unclassified_abs <- amc %>% left_join(class_names, by=('antibiotic_names')) %>%
   distinct(antibiotic_names, .keep_all=T)
 
 
-cat('Analysis of trends done...\n'); cat('Analysis Done...\n')
+cat('Analysis of trends done...\n');
 
-message('Analysis of trends done...\n'); message('Analysis Done...\n')
+message('Analysis of trends done...\n');

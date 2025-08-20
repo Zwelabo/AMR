@@ -313,7 +313,7 @@ server <- function(input, output, session) {
   observe({ req(input$table_5); step5_data(hot_to_r(input$table_5)) })
   observeEvent(input$run_script_5, {
     df <- step5_data()
-    script_file <- "step5.R"
+    script_file <- "amc_scripts/f5.R"
     if(file.exists(script_file)) {
       msg <- capture.output(tryCatch(source(script_file, local = TRUE),
                                      error = function(e) cat("Error:", e$message)), type = "output")
