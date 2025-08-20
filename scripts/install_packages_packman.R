@@ -29,7 +29,8 @@ pacman::p_load(
   ggrepel,
   rhandsontable,
   shiny,
-  writexl
+  writexl,
+  zoo
 )
 
 
