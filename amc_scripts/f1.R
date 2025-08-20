@@ -68,6 +68,7 @@ match_col_classes <- function(df1, df2) {
   names(df2_matched) <- names(df1)
   df2_matched
 }
+
 #
 bind_rows_match_classes <- function(dfs) {
   Reduce(function(x, y) bind_rows(x, match_col_classes(x, y)), dfs)
