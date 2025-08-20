@@ -31,15 +31,11 @@ choices1 <- c(names(amc_raw),'not available')  # Use your real variable
 cols <- c("region", "product", "strength", "pack_size", "quantity", "date", "route")
 
 empty_amc_df <- data.frame(Required_variables=cols,
-                           Corresponding_variables=c(rep('',7)),
-                           Country=c(rep('',7)),
-                           Population=c(rep('',7)))
+                           Corresponding_variables=c(rep('',7)))
 
 
 # Match column classes of df2 to df1 and allow missing columns
 # Match column classes of df2 to df1 and allow missing columns
-library(purrr)
-library(dplyr)
 
 # Match column classes of df2 to df1 and allow missing columns
 match_col_classes <- function(df1, df2) {
