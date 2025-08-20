@@ -1,0 +1,178 @@
+
+cat('Hang tight Beginning clean up...\n')
+message('Hang tight Beginning clean up...')
+
+
+#read in the user-validated file
+file_path <- file.path(amc_updates_dir,'matching_unclear_antibiotic_entries.xlsx')
+
+if (file.exists(file_path)) {
+  lookup_df <- read.xlsx(file_path)  # or read.csv, fread, etc.
+} else {
+  cat("File not found — keeping existing lookup_df\n")
+}
+
+# Split into matched and unmatched based on antibiotic_name NA
+final_matched_df <- lookup_df[!is.na(lookup_df$antibiotic_name), ] %>%
+  mutate(Source='User',
+         # antibiotic_name=tolower(antibiotic_name),
+         antibiotic_name=gsub('[-+_/,&]',',',tolower(antibiotic_name)),
+         antibiotic_name=gsub('and ',',',tolower(antibiotic_name)),
+         Verdict=as.character(Verdict)) %>%
+  filter(grepl('have|corr', Verdict, ignore.case=T))
+
+atcs_cleaned_update <- Reduce(bind_rows, list(atcs_cleaned, final_matched_df)) %>%
+  distinct(original_entry, .keep_all = T)
+
+#updating the atcs cleaned file
+writexl::write_xlsx(atcs_cleaned_update, 'amc_resources/ab_molecules.xlsx')
+
+
+#unmatched/non-antibiotic  entries
+final_unmatched_df <- lookup_df[is.na(lookup_df$Verdict), ] %>%
+  filter(nchar(original_entry)>3)
+
+##
+combined_matched_df <- Reduce(bind_rows, list(final_matched_df, matches_df)) %>%
+  filter(!(antibiotic_name %in% tolower(inhibitors)))
+
+
+#******************Mapping the values back
+# Make a named vector for mapping: names are original entries, values are antibiotic names
+map_vec <- setNames(combined_matched_df$antibiotic_name, combined_matched_df$original_entry)
+
+# Columns starting with 'name'
+n_cols <- grep("^x_name_part", names(amc_r1_match_prep), value = TRUE)
+
+
+# Function to map and replace values based on the lookup, preserving NAs and unmatched
+map_antibiotics <- function(vec, mapping) {
+  # For entries present in mapping, replace with mapped value; else keep original
+  sapply(vec, function(x) {
+    if (!is.na(x) && x %in% names(mapping)) {
+      mapping[[x]]
+    } else {
+      x
+    }
+  }, USE.NAMES = FALSE)
+}
+
+
+# Apply mapping on each namme* column
+amc_r1_match_prep[n_cols] <- lapply(amc_r1_match_prep[n_cols], map_antibiotics, mapping = map_vec)
+
+##creating the new ab_col retaining the inhibitors information
+map_vec_all <- setNames(c(combined_matched_df$antibiotic_name, tolower(inhibitors)), c(combined_matched_df$original_entry, tolower(inhibitors)))
+
+amc_r1_match_prep[n_cols] <- lapply(amc_r1_match_prep[n_cols], map_antibiotics, mapping = map_vec_all)
+
+
+
+#************Returning the resolved dataframe
+
+# Function to get antibiotic names from a vector and paste unique non-NA results
+
+pattern_replace <- paste(other_meds_components, collapse = "|")
+
+
+get_antibiotic_solved <- function(vec, lookup) {
+
+  # Map entries to antibiotic names where possible
+  mapped <- lookup[vec]
+  # Remove NA and duplicates
+
+  mapped_clean <- trimws(unique(mapped[!is.na(mapped)]))
+
+  # Paste together or return NA if none
+  if(length(mapped_clean) == 0) {
+    return(NA_character_)
+  } else {new_string = gsub(' ,', ',',paste(sort(mapped_clean), collapse = ","))
+  new_string = gsub(pattern_replace, "", new_string, ignore.case = TRUE)   #replacing the stabilizers and anasthetics
+  return(
+    paste(unique(trimws(unlist(strsplit(new_string, ",")))), collapse = ",")
+  )  #for AMC, have one without sort
+  }
+}
+
+
+get_antibiotic_solved_original_order <- function(vec, lookup) {
+
+  # Map entries to antibiotic names where possible
+  mapped <- lookup[vec]
+  # Remove NA and duplicates
+
+  mapped_clean <- trimws(unique(mapped[!is.na(mapped)]))
+
+  # Paste together or return NA if none
+  if(length(mapped_clean) == 0) {
+    return(NA_character_)
+  } else {new_string = gsub(' ,', ',',paste((mapped_clean), collapse = ","))
+  new_string = gsub(pattern_replace, "", new_string, ignore.case = TRUE)   #replacing the stabilizers and anasthetics
+  return(
+    paste(unique(trimws(unlist(strsplit(new_string, ",")))), collapse = ",")
+  )  #for AMC, have one without sort
+  }
+}
+
+##for mapping onto the processed amc_r1_match_prep
+
+map_vec_all_2 <- setNames(c(combined_matched_df$antibiotic_name, tolower(inhibitors)), c(combined_matched_df$antibiotic_name, tolower(inhibitors)))
+map_vec_2 <- setNames(combined_matched_df$antibiotic_name, combined_matched_df$antibiotic_name)
+
+# Apply per row  - we could introduce these 2 rows upfront in the dataset
+amc_r1_match_prep$antibiotic_names <- apply(amc_r1_match_prep[n_cols], 1, get_antibiotic_solved, lookup = map_vec_all_2)
+amc_r1_match_prep$antibiotic_molecules <- apply(amc_r1_match_prep[n_cols], 1, get_antibiotic_solved, lookup = map_vec_2)
+
+amc_r1_match_prep$antibiotic_names_orig_order <- apply(amc_r1_match_prep[n_cols], 1, get_antibiotic_solved_original_order, lookup = map_vec_all_2)
+
+amc_dataset_ed <-  amc_r1_match_prep%>% dplyr::select(-starts_with('x_name_part')) %>%
+  mutate(name_route=paste0(antibiotic_names, '_',tolower(route)))
+
+amc_dataset1 <- amc_dataset_ed%>%
+  filter(name_route %in% ddd_ref$name_route)
+
+#ddd of active comound is equal even in combination products
+amc_dataset_inhibitors <- subset(amc_dataset_ed, !(amc_dataset_ed$uid %in% amc_dataset1$uid)) %>%
+  mutate(name_route=ifelse(!grepl(',', antibiotic_molecules) & grepl(',', antibiotic_names),
+                           paste0(antibiotic_molecules, '_',tolower(route)),
+                           name_route))%>%
+  filter(name_route %in% ddd_ref$name_route)
+
+amc_dataset_comb <- subset(amc_dataset_ed, !(amc_dataset_ed$uid %in% c(amc_dataset1$uid, amc_dataset_inhibitors$uid)))
+
+
+
+#breking the combos
+amc_dataset_comb1 <- amc_dataset_comb %>% mutate(antibiotic_names_x1=antibiotic_names_orig_order) %>%
+  mutate(antibiotic_names_x1 = strsplit(antibiotic_names_orig_order, ",")) %>%
+  #separate_rows(antibiotic_names_x1, sep = ",") %>%
+  unnest_longer(antibiotic_names_x1, indices_to = "order") %>%
+  rename(antibiotic_order = order) %>%
+  mutate(name_route=paste0(antibiotic_names_x1, '_',tolower(route))) %>%
+  filter(name_route %in% ddd_ref$name_route)
+
+#not available
+updates_comb <- amc_dataset_comb %>% mutate(antibiotic_names_x1=antibiotic_names_orig_order) %>%
+  separate_rows(antibiotic_names_x1, sep = ",") %>%
+  mutate(name_route=paste0(antibiotic_names_x1, '_',tolower(route))) %>%
+  filter(!(name_route %in% ddd_ref$name_route)) %>%
+  select(`ATC level name`=antibiotic_names_x1, Adm.R =route) %>%
+  distinct() %>%
+  mutate(aware_cats= ' ',DDD=' ', Unit=' ') %>%
+  filter(!is.na(`ATC level name`))
+
+
+
+amc_dataset_comb_r <- subset(amc_dataset_comb, !(amc_dataset_comb$uid %in% c(amc_dataset1$uid, amc_dataset_inhibitors$uid, amc_dataset_comb1$uid)))
+
+ddd_updates <- amc_dataset_comb_r %>% select(`ATC level name`=antibiotic_molecules, Adm.R =route) %>%
+  distinct() %>%
+  mutate(aware_cats= ' ',DDD=' ', Unit=' ') %>%
+  filter(!is.na(`ATC level name`))
+
+ddd_updates <- Reduce(bind_rows,
+                      list(ddd_updates, updates_comb)) %>%
+  filter(!(`ATC level name` %in% exclude_extra))
+
+cat('Done!...')
+message('Done!...')
