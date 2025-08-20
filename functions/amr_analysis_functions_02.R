@@ -1,7 +1,7 @@
 
 ###call and rename stuff
 
-cols_to_update <- read_excel(paste0(folder_path,"/select_amr_variables.xlsx"))
+cols_to_update <- read_excel(paste0(amr_updates_dir,"/select_amr_variables.xlsx"))
 
 # Perform renaming
 names(amr)[names(amr) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amr)[names(amr) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
@@ -102,9 +102,9 @@ get_specimen_info <- function(df){
 }
 
 
-abx_vec_dict <- c(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),
-                  str_split_i(unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$Code),'_',1),
-                  unique(readxl::read_excel('test-data/Antibiotic_Codes.xlsx')$AntiMicrobialAgent))
+abx_vec_dict <- c(unique(readxl::read_excel(paste0(amr_updates_dir,'/Antibiotic_Codes.xlsx'))$Code),
+                  str_split_i(unique(readxl::read_excel(paste0(amr_updates_dir,'/Antibiotic_Codes.xlsx'))$Code),'_',1),
+                  unique(readxl::read_excel(paste0(amr_updates_dir,'/Antibiotic_Codes.xlsx'))$AntiMicrobialAgent))
 
 
 get_test_results <- function(df){
