@@ -33,7 +33,7 @@ library(shiny); runApp('amr_analysis_dev.R')
 - You will then need to enter your country name and register it by clicking the 'Register Country' button.
 - Then you will need to match your datasets' variables with those of the system for alignment. Once this step is done, you will need to save by clicking the 'Save Data' button. The file will be saved in MAAP-Data-Analysis/test-data/analysis_update.
 
-Finally, you will click the 'Begin Analysis' button. This will perform the analysis process end-to-end.
+Finally, you will click the 'Begin Analysis' button. This will perform the analysis process end-to-end automatically.
 
 ## Output
 If everything runs successfully, you should have the following in the results folder:
@@ -75,7 +75,7 @@ Place your input datasets into the test-data/AMC/ folder. Two datasets are requi
 - File name: AMC_test_data.xlsx (only for demo)
 - Description: Country-specific antimicrobial consumption data, including product names, strengths, routes, and quantities.
 
-### Important: Keep the file names exactly as specified above unless otherwise advised & modified.
+### Importantly, the dataset file should have "AMC" as its prefix.
 
 ## Step 4: Run the Analysis
 To run the analysis in RStudio:
@@ -83,10 +83,13 @@ To run the analysis in RStudio:
 - Copy and paste the single line of command below into the new script:
 
 ```{r}
-{ source(file.path("scripts", "run_amc_analysis.R")); run_amc_analysis() }
+library(shiny); runApp('amc_analysis_app.R')
 ```
+This will launch an app that will walk you through a 6 step process for data preparation, cleaning, and finally analysis.
 
-- Run the script. You’ll be prompted to enter your country’s estimated population. The script will then execute an end-to-end analysis automatically.
+- The first step, you’ll be prompted to enter your country’s name and estimated population.
+-
+- The script will then execute an end-to-end analysis automatically.
 
 ## Output
 If the script runs successfully, the following visualizations will be generated and saved in the plots_AMC folder:
