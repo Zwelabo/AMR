@@ -26,14 +26,14 @@ Clone the repository to your local machine using GitHub Desktop. The repository 
 ## Step 4: Running the Analysis
 Execute the main script below - this will open an app that will walk you through the data preparation process, executing a Play-along mode.
 
+```{r}
+library(shiny); runApp('amr_analysis_dev.R')
+```
+
 - You will then need to enter your country name and register it by clicking the 'Register Country' button.
 - Then you will need to match your datasets' variables with those of the system for alignment. Once this step is done, you will need to save by clicking the 'Save Data' button. The file will be saved in MAAP-Data-Analysis/test-data/analysis_update.
 
 Finally, you will click the 'Begin Analysis' button. This will perform the analysis process end-to-end.
-
-```{r}
-library(shiny); runApp('amr_analysis_dev.R')
-```
 
 ## Output
 If everything runs successfully, you should have the following in the results folder:
