@@ -7,7 +7,7 @@ cols_to_update <- read_excel(paste0(amr_updates_dir,"/select_amr_variables.xlsx"
 names(amr)[names(amr) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amr)[names(amr) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
 
 #Country code
-cntry=cols_to_update$enter_country_name_or_code[1]
+#cntry=cols_to_update$enter_country_name_or_code[1]
 
 
 #creating blank space holders for the unavailable cols

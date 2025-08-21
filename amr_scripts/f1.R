@@ -31,7 +31,7 @@ initial_df <- data.frame(
   man_vars = c('Specimen date', 'Date of data entry', 'Specimen type', "Organism", 'Age',
                'Sex', "Identification number"),
   my_dataset = factor(rep('please select', 7), levels = choices1),
-  enter_country_name_or_code='',
+ # enter_country_name_or_code='',
   stringsAsFactors = FALSE
 )
 
