@@ -12,8 +12,13 @@ if (file.exists(file_path)) {
   message("File not found — amc_class_updates")
 }
 
-amc_class_updates=bind_rows_match_classes(list(class_names,amc_class_updates)) %>%
+amc_class_updates=bind_rows_match_classes(list(class_names,amc_class_updates%>%
+                                                 mutate(updated_by='User'))) %>%
   filter(!is.na(Class))
+
+#update the original_file
+write_xlsx(amc_class_updates,'amc_resources/ab_class_updated.xlsx')
+
 
 amc %>% left_join(amc_class_updates, by=('antibiotic_names')) %>%
   filter(!is.na(Class)) %>%   ##continue here
