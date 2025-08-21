@@ -168,7 +168,7 @@ abg_df <- an_df %>%
 
   mutate_if(is_sir_eligible, as.sir) %>%
 
-  antibiogram()
+  antibiogram(antimicrobials=ab_cols)
 
 # Creating a workbook and worksheet
 wb <- createWorkbook()
