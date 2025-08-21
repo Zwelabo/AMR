@@ -148,7 +148,7 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$reg_1, {
-    req(input$country_name, input$population)
+    req(input$country_name)
 
        # Save to global environment
     assign("cntry", input$country_name, envir = .GlobalEnv)
@@ -156,9 +156,8 @@ server <- function(input, output, session) {
 
     # Feedback to user
     output$register_msg <- renderText({
-      paste0("✅ Registered: ", input$country_name,
-             " with population ", input$population)
-    })
+      paste0("✅ R Registered: ", input$country_name)
+     })
   })
 
 
