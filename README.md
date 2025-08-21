@@ -24,26 +24,31 @@ Clone the repository to your local machine using GitHub Desktop. The repository 
 - Now you can attempt to run the analysis script.
 
 ## Step 4: Running the Analysis
-Execute the main script below - this will open an app that will walk the user through the data preparation process, executing a Play-along mode.
+Execute the main script below - this will open an app that will walk you through the data preparation process, executing a Play-along mode.
 
-- The user will need to enter their country name and register it.
-- Then they will be prompted to match their datasets' variables 
+- You will then need to enter your country name and register it by clicking the 'Register Country' button.
+- Then you will need to match your datasets' variables with those of the system for alignment. Once this step is done, you will need to save by clicking the 'Save Data' button. The file will be saved in MAAP-Data-Analysis/test-data/analysis_update.
+
+Finally, you will click the 'Begin Analysis' button. This will perform the analysis process end-to-end.
 
 ```{r}
 library(shiny); runApp('amr_analysis_dev.R')
 ```
 
 ## Output
--   If everything runs successfully, you should have the following in the results folder:
-      - 4 tables based on the provided input file
-        - Demographics
-        - Facilities information
-        - Generic organisms list
-        - The test result file (interpreted AST results), with cleaned and standardized AST interpretations
-      - An antibiogram of the tested bug-drug combinations
-      - Sub-folders of analyzed pathogens e.g. ESKAPE pathogens, with each folder named after the organism analyzed, the results in these folders include:
-        - CSV files of Resistance distribution by Age, gender, and specimen type
-        - Barplots of the resistance prevalence of ESKAPE pathogens
+If everything runs successfully, you should have the following in the results folder:
+
+1. 4 tables based on the provided input file
+- Demographics
+- Facilities information
+- Generic organisms list
+- The test result file (interpreted AST results), with cleaned and standardized AST interpretations
+  
+2. An antibiogram of the tested bug-drug combinations
+
+3. Sub-folders of analyzed pathogens e.g. ESKAPE pathogens, with each folder named after the organism analyzed, the results in these folders include:
+- CSV files of Resistance distribution by Age, gender, and specimen type
+- Barplots of the resistance prevalence of ESKAPE pathogens
  
 # Set B: AMC analysis script- MAAP2 (ASLM)
 This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns. Please follow the Steps 1 to 4 below to be able to utilize the scripts develop.
