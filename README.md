@@ -3,112 +3,53 @@
 These scripts have been developed to simplify and standardize AMR/C/U data analysis through ASLM as part of the MAAP Phase II project funded through Fleming Fund. These scripts are largely based on the free and open-source [AMR package](https://msberends.github.io/AMR/index.html) implemented in R.
 
 # Set A: AMR analysis script- MAAP2 (ASLM)
+Follow the steps below:
 
-## Set-up and software installation 
+## Step 1: Set-Up and Software Installation
+To get started, install the required software:
+- Install R: Visit [cran.r-project.org](https://cran.r-project.org/bin/windows/base/) and download the appropriate version for your system (e.g., Download R-4.4.3 for Windows or Mac).
+- Install RStudio: Go to the [RStudio desktop download page](https://posit.co/download/rstudio-desktop/) and download the latest version. Click the installer to begin installation once downloaded.
+- Install GitHub Desktop: Navigate to the [GitHub-Desktop download page](https://desktop.github.com/download/) and click Download for Windows or Mac. Follow the installation instructions and open the application after successful installation.
 
-First, you will need to download and install the R software and the latest free version of RStudio. To install R;
+## Step 2: Clone the Repository
+Clone the repository to your local machine using GitHub Desktop. The repository contains scripts for AMR analysis, including AMC & AMU processing and plotting.
+- Go to `File` -\> `Clone repository` -\> URL and then paste the following link `https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git` in the first box and
+- Click Clone
+- In RStudio go to `File` -\> `New Project` -\> `Existing Project` -\> Browse (Navigate to your Documents -\> GitHub -\> MAAP-Data-Analysis)
+- Click MAAP-Data-Analysis.Rproj
+- This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
 
-1.  Navigate to [cran.r-project.org](https://cran.r-project.org/bin/windows/base/), and
-2.  If you are on a Windows machine, click Download R-4.4.3 for Windows. This will download the installer to your Downloads folder.
-3.  Once the download has been completed, click the installer to install R on your computer and follow the prompts without making any changes.
+## Step 3: Upload your Dataset
+- Add your input data to the `test-data` folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
+- Now you can attempt to run the analysis script.
 
-Next, install RStudio by navigating to the [RStudio desktop download page](https://posit.co/download/rstudio-desktop/). Click the blue tab under Install RStudio and click the installer to begin the installation once the download has completed.
-
-## Running Code
-
-Clone the Country-specific MAAP Data Analysis repository from GitHub
-
-1.  Download GitHUb Desktop from the following link: [GitHub-Desktop download page](https://desktop.github.com/download/), by clicking the **Download for Windows or Mac** tab.
-
-    Follow the installation instructions and open the application once installation has completed successfully.
-
-2.   Go to `File` -\> `Clone repository` -\> URL and then paste the following link `https://github.com/ASLM-Fabebe/MAAP-Data-Analysis.git` in the first box and
-
-3.  Click Clone
-
-4.  In RStudio go to `File` -\> `New Project` -\> `Existing Project` -\> Browse (Navigate to your Documents -\> GitHub -\> MAAP-Data-Analysis)
-
-5.  Click MAAP-Data-Analysis.Rproj
-
-    This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
-6. Click on `File` -\> `New File` -\> `R Script`
-   Alternatively just press `Ctrl+Shift+N` to open a new R Script file
-
-   *You can copy and paste the commands in `Step 1 - 4` below to perform your analysis*
-
-
-## Input Data
-
--   Add your input data to the `test-data` folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
-
--    Now you can attempt to run the analysis script.
-
--   You can specify your organisms of interest by adding them on `Step 2` below:
-
-
-## Step 1: Load packages
-
-1.  Within RStudio in the bottom right pane, click on Files -\> scripts folder -\> install_packages_pacman.R (This will open the script in the top-right pane)
-2.  Select all (Ctrl-A) and click Run (This will install all the requisite packages and prepare your environment for the analysis)
-
-Alternatively;
-
-1.  Click the main analysis script (In the bottom-right pane, click Files -\> scripts folder -\> amr_data_cleaning_and_sir_interpretation.R), and
-2.  Run the first line under "Load packages"
-     
-
-### Loading Packages
+## Step 4: Running the Analysis
+Execute the main script below - this will open an app that will walk you through the data preparation process, executing a Play-along mode.
 
 ```{r}
-source(file.path("scripts","install_packages_packman.R"))
+library(shiny); runApp('amr_analysis_dev.R')
 ```
 
-## Step 2: Provide your pathogens of interest by adding them to the vector below and execute
+- You will then need to enter your country name and register it by clicking the 'Register Country' button.
+- Then you will need to match your datasets' variables with those of the system for alignment. Once this step is done, you will need to save by clicking the 'Save Data' button. The file will be saved in MAAP-Data-Analysis/test-data/analysis_update.
 
-```{r}
-# Specify organisms of interest -------------------------------------------
+Finally, you will click the 'Begin Analysis' button. This will perform the analysis process end-to-end automatically.
 
-eskape_pathogens <- c(
-  "Enterococcus faecium",
-  "Staphylococcus aureus",
-  "Klebsiella pneumoniae",
-  "Acinetobacter baumannii",
-  "Pseudomonas aeruginosa",
-  "Escherichia coli",
-  "Enterobacter cloacae complex", 
-  "Enterobacter aerogenes", 
-  "Enterobacter hormaechei" 
-)
-```
-*By default the list only includes ESKAPE pathogens*
+## Output
+If everything runs successfully, you should have the following in the results folder:
 
-## Step 3: Specify your country code 
+1. 4 tables based on the provided input file
+- Demographics
+- Facilities information
+- Generic organisms list
+- The test result file (interpreted AST results), with cleaned and standardized AST interpretations
+  
+2. An antibiogram of the tested bug-drug combinations
 
-```{r}
-# Insert your country code ------------------------------------------------
-
-cntry='TZ' # e.g. TZ for Tanzania
-```
-
-## Step 4: Execute the main script - this will perform the analysis end-to-end
-
-```{r}
-source(file.path("scripts","run_step_01.R"))
-```
-
--   If everything runs successfully, you should have the following in the results folder:
-      - 4 tables based on the provided input file
-        - Demographics
-        - Facilities information
-        - Generic organisms list
-        - The test result file (interpreted AST results), with cleaned and standardized AST interpretations
-      - An antibiogram of the tested bug-drug combinations
-      - Sub-folders of analyzed pathogens e.g. ESKAPE pathogens, with each folder named after the organism analyzed, the results in these folders include:
-        - CSV files of Resistance distribution by Age, gender, and specimen type
-        - Barplots of the resistance prevalence of ESKAPE pathogens
+3. Sub-folders of analyzed pathogens e.g. ESKAPE pathogens, with each folder named after the organism analyzed, the results in these folders include:
+- CSV files of Resistance distribution by Age, gender, and specimen type
+- Barplots of the resistance prevalence of ESKAPE pathogens
  
-
-
 # Set B: AMC analysis script- MAAP2 (ASLM)
 This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns. Please follow the Steps 1 to 4 below to be able to utilize the scripts develop.
 
@@ -134,7 +75,7 @@ Place your input datasets into the test-data/AMC/ folder. Two datasets are requi
 - File name: AMC_test_data.xlsx (only for demo)
 - Description: Country-specific antimicrobial consumption data, including product names, strengths, routes, and quantities.
 
-### Important: Keep the file names exactly as specified above unless otherwise advised & modified.
+### Importantly, the dataset file should have "AMC" as its prefix.
 
 ## Step 4: Run the Analysis
 To run the analysis in RStudio:
@@ -142,10 +83,13 @@ To run the analysis in RStudio:
 - Copy and paste the single line of command below into the new script:
 
 ```{r}
-{ source(file.path("scripts", "run_amc_analysis.R")); run_amc_analysis() }
+library(shiny); runApp('amc_analysis_app.R')
 ```
+This will launch an app that will walk you through a 6 step process for data preparation, cleaning, and finally analysis.
 
-- Run the script. You’ll be prompted to enter your country’s estimated population. The script will then execute an end-to-end analysis automatically.
+- The first step, you’ll be prompted to enter your country’s name and estimated population.
+-
+- The script will then execute an end-to-end analysis automatically.
 
 ## Output
 If the script runs successfully, the following visualizations will be generated and saved in the plots_AMC folder:
