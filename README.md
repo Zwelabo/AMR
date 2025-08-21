@@ -57,39 +57,6 @@ Alternatively;
 2.  Run the first line under "Load packages"
      
 
-### Loading Packages
-
-```{r}
-source(file.path("scripts","install_packages_packman.R"))
-```
-
-## Step 2: Provide your pathogens of interest by adding them to the vector below and execute
-
-```{r}
-# Specify organisms of interest -------------------------------------------
-
-eskape_pathogens <- c(
-  "Enterococcus faecium",
-  "Staphylococcus aureus",
-  "Klebsiella pneumoniae",
-  "Acinetobacter baumannii",
-  "Pseudomonas aeruginosa",
-  "Escherichia coli",
-  "Enterobacter cloacae complex", 
-  "Enterobacter aerogenes", 
-  "Enterobacter hormaechei" 
-)
-```
-*By default the list only includes ESKAPE pathogens*
-
-## Step 3: Specify your country code 
-
-```{r}
-# Insert your country code ------------------------------------------------
-
-cntry='TZ' # e.g. TZ for Tanzania
-```
-
 ## Step 4: Execute the main script - this will perform the analysis end-to-end
 
 ```{r}
@@ -107,8 +74,6 @@ source(file.path("scripts","run_step_01.R"))
         - CSV files of Resistance distribution by Age, gender, and specimen type
         - Barplots of the resistance prevalence of ESKAPE pathogens
  
-
-
 # Set B: AMC analysis script- MAAP2 (ASLM)
 This R script processes and analyzes antimicrobial consumption (AMC) data to calculate Defined Daily Doses (DDD) and DDD per 1,000 inhabitants per day (DiD), with visualization of trends and patterns. Please follow the Steps 1 to 4 below to be able to utilize the scripts develop.
 
