@@ -19,39 +19,21 @@ Clone the repository to your local machine using GitHub Desktop. The repository 
 - Click MAAP-Data-Analysis.Rproj
 - This will open the MAAP-Data-Analysis scripts within RStudio on your local computer.
 
-  
-6. Click on `File` -\> `New File` -\> `R Script`
-   Alternatively just press `Ctrl+Shift+N` to open a new R Script file
+## Step 3: Upload your Dataset
+- Add your input data to the `test-data` folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
+- Now you can attempt to run the analysis script.
 
-   *You can copy and paste the commands in `Step 1 - 4` below to perform your analysis*
+## Step 4: Running the Analysis
+Execute the main script below - this will open an app that will walk the user through the data preparation process, executing a Play-along mode.
 
-
-## Input Data
-
--   Add your input data to the `test-data` folder. For now the script only accepts input in Excel format. Importantly, the file with AST data should have "AMR" as its prefix.
-
--    Now you can attempt to run the analysis script.
-
--   You can specify your organisms of interest by adding them on `Step 2` below:
-
-
-## Step 1: Load packages
-
-1.  Within RStudio in the bottom right pane, click on Files -\> scripts folder -\> install_packages_pacman.R (This will open the script in the top-right pane)
-2.  Select all (Ctrl-A) and click Run (This will install all the requisite packages and prepare your environment for the analysis)
-
-Alternatively;
-
-1.  Click the main analysis script (In the bottom-right pane, click Files -\> scripts folder -\> amr_data_cleaning_and_sir_interpretation.R), and
-2.  Run the first line under "Load packages"
-     
-
-## Step 4: Execute the main script - this will perform the analysis end-to-end
+- The user will need to enter their country name and register it.
+- Then they will be prompted to match their datasets' variables 
 
 ```{r}
-source(file.path("scripts","run_step_01.R"))
+library(shiny); runApp('amr_analysis_dev.R')
 ```
 
+## Output
 -   If everything runs successfully, you should have the following in the results folder:
       - 4 tables based on the provided input file
         - Demographics
