@@ -31,7 +31,8 @@ pacman::p_load(
   shiny,
   writexl,
   zoo,
-  shinythemes
+  shinythemes,
+  rhandsontable
 )
 
 
