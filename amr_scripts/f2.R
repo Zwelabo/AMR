@@ -117,7 +117,7 @@ an_df <- sir_outcomes_df_wide %>%
 
 
 
-ab_cols <- unique(sir_outcomes_df$ab)  #antibiotic columns
+ab_cols <- as.character(unique(sir_outcomes_df$ab))  #antibiotic columns
 
 if(file.exists('amr_resources/ab_class_list.csv')){
   ab_class_list <- read.csv('amr_resources/ab_class_list.csv')
