@@ -1,8 +1,0 @@
-"","mo_organism","ab_class","n","r","total_R","ab_name"
-"1","Klebsiella pneumoniae","Aminoglycosides",38,6,0.157894736842105,"Aminoglycosides"
-"2","Klebsiella pneumoniae","Beta-lactams/penicillins",57,18,0.315789473684211,"Beta-lactams/penicillins"
-"3","Klebsiella pneumoniae","Carbapenems",59,0,0,"Carbapenems"
-"4","Klebsiella pneumoniae","Cephalosporins (1st gen.)",22,16,0.727272727272727,"Cephalosporins (1st gen.)"
-"5","Klebsiella pneumoniae","Cephalosporins (3rd gen.)",65,43,0.661538461538462,"Cephalosporins (3rd gen.)"
-"6","Klebsiella pneumoniae","Cephalosporins (4th gen.)",29,13,0.448275862068966,"Cephalosporins (4th gen.)"
-"7","Klebsiella pneumoniae","Quinolones",45,24,0.533333333333333,"Quinolones"

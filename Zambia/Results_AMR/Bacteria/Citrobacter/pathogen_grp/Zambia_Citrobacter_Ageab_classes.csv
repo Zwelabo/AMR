@@ -1,7 +1,0 @@
-"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
-"1","Citrobacter","20-49","Aminoglycosides",1,0,0,"Aminoglycosides","20-49"
-"2","Citrobacter","20-49","Beta-lactams/penicillins",2,1,0.5,"Beta-lactams/penicillins","20-49"
-"3","Citrobacter","20-49","Carbapenems",2,0,0,"Carbapenems","20-49"
-"4","Citrobacter","20-49","Cephalosporins (3rd gen.)",2,2,1,"Cephalosporins (3rd gen.)","20-49"
-"5","Citrobacter","20-49","Cephalosporins (4th gen.)",2,2,1,"Cephalosporins (4th gen.)","20-49"
-"6","Citrobacter","20-49","Quinolones",1,1,1,"Quinolones","20-49"

@@ -1,7 +1,0 @@
-"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
-"1","Salmonella","F","AMP",2,2,1,"Ampicillin","F"
-"2","Salmonella","F","CAZ",2,0,0,"Ceftazidime","F"
-"3","Salmonella","F","CRO",4,0,0,"Ceftriaxone","F"
-"4","Salmonella","F","CTX",4,4,1,"Cefotaxime","F"
-"5","Salmonella","F","IPM",2,0,0,"Imipenem","F"
-"6","Salmonella","F","MEM",4,2,0.5,"Meropenem","F"

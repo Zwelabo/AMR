@@ -1,6 +1,0 @@
-"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
-"1","Staphylococcus aureus","F","Macrolides/lincosamides",1,0,0,"Macrolides/lincosamides","F"
-"2","Staphylococcus aureus","F","Oxazolidinones",7,0,0,"Oxazolidinones","F"
-"3","Staphylococcus aureus","M","Macrolides/lincosamides",3,2,0.666666666666667,"Macrolides/lincosamides","M"
-"4","Staphylococcus aureus","M","Oxazolidinones",12,2,0.166666666666667,"Oxazolidinones","M"
-"5","Staphylococcus aureus","M","Quinolones",2,0,0,"Quinolones","M"

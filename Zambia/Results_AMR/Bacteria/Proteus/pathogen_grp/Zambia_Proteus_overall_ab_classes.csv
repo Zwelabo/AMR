@@ -1,8 +1,0 @@
-"","mo_organism","ab_class","n","r","total_R","ab_name"
-"1","Proteus","Aminoglycosides",8,2,0.25,"Aminoglycosides"
-"2","Proteus","Beta-lactams/penicillins",12,8,0.666666666666667,"Beta-lactams/penicillins"
-"3","Proteus","Carbapenems",13,4,0.307692307692308,"Carbapenems"
-"4","Proteus","Cephalosporins (1st gen.)",2,2,1,"Cephalosporins (1st gen.)"
-"5","Proteus","Cephalosporins (3rd gen.)",14,9,0.642857142857143,"Cephalosporins (3rd gen.)"
-"6","Proteus","Cephalosporins (4th gen.)",6,2,0.333333333333333,"Cephalosporins (4th gen.)"
-"7","Proteus","Quinolones",7,3,0.428571428571429,"Quinolones"

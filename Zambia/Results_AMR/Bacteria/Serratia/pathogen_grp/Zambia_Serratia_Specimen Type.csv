@@ -1,8 +1,0 @@
-"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
-"1","Serratia","Urine","CAZ",2,0,0,"Ceftazidime","Urine"
-"2","Serratia","Urine","CRO",2,0,0,"Ceftriaxone","Urine"
-"3","Serratia","Urine","CTX",2,0,0,"Cefotaxime","Urine"
-"4","Serratia","Urine","MEM",2,0,0,"Meropenem","Urine"
-"5","Serratia","Urine","NAL",1,0,0,"Nalidixic acid","Urine"
-"6","Serratia","Urine","NOR",2,0,0,"Norfloxacin","Urine"
-"7","Serratia","Urine","TZP",3,0,0,"Piperacillin/tazobactam","Urine"
