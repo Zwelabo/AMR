@@ -3,6 +3,26 @@
 
 cols_to_update <- read_excel(paste0(amr_updates_dir,"/select_amr_variables.xlsx"))
 
+#move columns to beginning
+# # Move given columns to the end of a data frame
+# move_cols_to_beginning <- function(df, cols) {
+#   all_cols <- names(df)
+#   cols <- intersect(cols, all_cols)  # keep only valid ones
+#   other_cols <- setdiff(all_cols, cols)
+#   df <- df[, c(cols, other_cols), drop = FALSE]
+#   return(df)
+# }
+#
+# ##deduplicate names keep last
+# dedup_cols_keep_last <- function(df) {
+#   dupes <- duplicated(names(df), fromLast = TRUE)
+#   df <- df[, !dupes, drop = FALSE]
+#   return(df)
+# }
+#
+# amr <- move_cols_to_beginning(amr, cols_to_update$man_vars)
+
+
 # Perform renaming
 names(amr)[names(amr) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amr)[names(amr) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
 
@@ -21,9 +41,11 @@ get_inputs_and_prelim_cleanup <- function(){
   # Load AMR data sources ---------------------------------------------------
 
    amr <- amr %>%
-    mutate(
-      Specimen_date_new = coalesce(`Specimen date`, `Date of data entry`)  ##careful here, some faciliteis do this in intervals
-    ) %>%
+    mutate( Specimen_date_new = if ("Date" %in% class(`Date of data entry`)) {
+        coalesce(`Specimen date`, `Date of data entry`)
+      } else {
+        `Specimen date`
+      }) %>%
      dplyr::mutate(r_id=row_number()) %>%  # assign distinct r_ids
     mutate(numeric_value = as.numeric(Specimen_date_new)) %>%
     mutate(New_date_posixct = ifelse(is.na(numeric_value),

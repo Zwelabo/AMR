@@ -162,13 +162,24 @@ openxlsx::write.xlsx(excluded_rec,file = paste0(cntry,"/Results_AMR/Intrinsic.no
 message('Generating the antibiogram ....')
 cat('Generating the antibiogram ....\n')
 
+#preprocessing to work in macs also
+
+prep_for_antibiogram_mac <- function(df) {
+  df %>%
+    mutate(across(where(is_sir_eligible),
+                  ~ suppressWarnings(as.sir(as.character(.)))))
+}
+
+
+an_df <- prep_for_antibiogram_mac(an_df)
+
 abg_df <- an_df %>%
 
   #filter(mo_organism==org_name) %>%
 
   mutate_if(is_sir_eligible, as.sir) %>%
 
-  antibiogram(antimicrobials=ab_cols)
+  antibiogram()
 
 # Creating a workbook and worksheet
 wb <- createWorkbook()
