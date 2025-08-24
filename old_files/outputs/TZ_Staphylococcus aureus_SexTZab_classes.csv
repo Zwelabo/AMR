@@ -1,7 +1,0 @@
-"","mo_organism","get(par_var_name)","ab_class","n","r","total_R","ab_name","var_name"
-"1","Staphylococcus aureus","f","Aminoglycosides",76,15,0.197368421052632,"Aminoglycosides","f"
-"2","Staphylococcus aureus","f","Cephalosporins (2nd gen.)",96,50,0.520833333333333,"Cephalosporins (2nd gen.)","f"
-"3","Staphylococcus aureus","f","Trimethoprims",56,43,0.767857142857143,"Trimethoprims","f"
-"4","Staphylococcus aureus","m","Aminoglycosides",87,21,0.241379310344828,"Aminoglycosides","m"
-"5","Staphylococcus aureus","m","Cephalosporins (2nd gen.)",101,52,0.514851485148515,"Cephalosporins (2nd gen.)","m"
-"6","Staphylococcus aureus","m","Trimethoprims",54,33,0.611111111111111,"Trimethoprims","m"

@@ -1,7 +1,0 @@
-"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
-"1","Acinetobacter","f","CIP",18,4,0.222222222222222,"Ciprofloxacin","f"
-"2","Acinetobacter","f","GEN",20,5,0.25,"Gentamicin","f"
-"3","Acinetobacter","f","MEM",32,0,0,"Meropenem","f"
-"4","Acinetobacter","m","CIP",18,4,0.222222222222222,"Ciprofloxacin","m"
-"5","Acinetobacter","m","GEN",13,2,0.153846153846154,"Gentamicin","m"
-"6","Acinetobacter","m","MEM",16,0,0,"Meropenem","m"

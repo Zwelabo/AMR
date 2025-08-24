@@ -156,7 +156,7 @@ server <- function(input, output, session) {
 
     # Feedback to user
     output$register_msg <- renderText({
-      paste0("✅ R Registered: ", input$country_name)
+      paste0("✅ R Country Successfully Registered: ", input$country_name)
      })
   })
 

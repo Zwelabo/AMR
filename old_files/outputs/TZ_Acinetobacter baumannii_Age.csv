@@ -1,8 +1,0 @@
-"","mo_organism","get(par_var_name)","ab","n","r","total_R","ab_name","var_name"
-"1","Acinetobacter baumannii","20-49","CAZ",2,0,0,"Ceftazidime","20-49"
-"2","Acinetobacter baumannii","20-49","GEN",1,0,0,"Gentamicin","20-49"
-"3","Acinetobacter baumannii","20-49","MEM",2,0,0,"Meropenem","20-49"
-"4","Acinetobacter baumannii","50-64","CAZ",2,2,1,"Ceftazidime","50-64"
-"5","Acinetobacter baumannii","50-64","GEN",1,1,1,"Gentamicin","50-64"
-"6","Acinetobacter baumannii","50-64","IPM",2,2,1,"Imipenem","50-64"
-"7","Acinetobacter baumannii","50-64","SXT",1,0,0,"Trimethoprim/sulfamethoxazole","50-64"
