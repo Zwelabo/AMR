@@ -26,7 +26,7 @@ convert2sir_fun <- function(df){
     drug_code=as.ab(res_list[[i]][["drug_code"]])
     test=res_list[[i]][["test_type"]]
     guideline=res_list[[i]][["guideline"]]
-    value= as.numeric(res_list[[i]][["vals"]])
+    value= suppressWarnings(as.numeric(res_list[[i]][["vals"]]))
 
 
 

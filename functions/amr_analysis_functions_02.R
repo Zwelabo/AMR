@@ -263,9 +263,9 @@ pivot_abx_results <- function(df){
 
     mutate(across(any_of(abx_vec), ~as.character(.)))            #watch out for the uninterpretable bacteria and antibiotics
 
-  mo_failures()
+  #mo_failures()
 
-  mo_uncertainties()
+  #mo_uncertainties()
 
   # pivot drugs from wide into long format and map to standard drug codes
 
@@ -364,30 +364,25 @@ get_con_interp <- function(df){
 }
 
 # Safe antibiogram wrapper
-safe_antibiogram <- function(df, antimicrobials = NULL, ...) {
-  out <- tryCatch({
-    # ensure antimicrobials are character if provided
+safe_antibiogram <- function(df, antimicrobials = NULL, min_n = 30) {
+  tryCatch({
     if (!is.null(antimicrobials)) {
-      antimicrobials <- as.character(antimicrobials)
+      out <- df %>% antibiogram(antimicrobials = antimicrobials, minimum = min_n)
+    } else {
+      out <- df %>% antibiogram(minimum = min_n)
     }
 
-    suppressWarnings(
-      antibiogram(df, antimicrobials = antimicrobials, ...)
-    )
+    # Return empty df if no rows
+    if (is.null(out) || nrow(out) == 0) {
+      return(data.frame())
+    } else {
+      return(out)
+    }
   },
-  error = function(e) NULL
-  )
-
-  if (is.null(out) || nrow(out) == 0) {
-    return(tibble::tibble(
-      bacteria = character(),
-      ab       = character(),
-      n        = integer(),
-      R        = numeric(),
-      S        = numeric(),
-      I        = numeric()
-    ))
-  }
-
-  out
+  error = function(e) {
+    message("⚠ No valid antibiogram could be generated: ", e$message)
+    return(data.frame())
+  })
 }
+
+

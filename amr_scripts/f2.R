@@ -177,13 +177,19 @@ prep_for_antibiogram_mac <- function(df) {
 
 an_df <- prep_for_antibiogram_mac(an_df)
 
-abg_df <- an_df %>%
-  mutate_if(is_sir_eligible, as.sir) %>%
-  mutate(bacteria = as.mo(bacteria))   # ensure correct class
 
-# run antibiogram
-abg_df <- safe_antibiogram(abg_df, col_mo = "bacteria", minimum = 30)
-
+## ---- call per OS ----
+if (user_os == "Mac") {
+  abg_df <- an_df %>%
+    mutate_if(is_sir_eligible, as.sir) %>%
+    mutate(bacteria = as.mo(bacteria)) %>%
+    safe_antibiogram(antimicrobials = ab_cols)
+} else {
+  abg_df <- an_df %>%
+    mutate_if(is_sir_eligible, as.sir) %>%
+    mutate(bacteria = as.mo(bacteria)) %>%
+    safe_antibiogram()
+}
 
 # Creating a workbook and worksheet
 wb <- createWorkbook()
