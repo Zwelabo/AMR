@@ -370,14 +370,10 @@ safe_antibiogram <- function(df, ...) {
     error = function(e) NULL
   )
   # ensure it's always a data.frame, even if empty
-  if (is.null(out) || nrow(out) == 0) {
+  if (!is.null(out) && nrow(out) > 0) {
     out <- tibble::tibble(
-      bacteria = character(),
-      ab       = character(),
-      n        = integer(),
-      R        = numeric(),
-      I        = numeric(),
-      S        = numeric()
+      No_data_available = character()
+
     )
   }
   out
