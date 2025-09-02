@@ -364,17 +364,30 @@ get_con_interp <- function(df){
 }
 
 # Safe antibiogram wrapper
-safe_antibiogram <- function(df, ...) {
-  out <- tryCatch(
-    antibiogram(df, ...),
-    error = function(e) NULL
-  )
-  # ensure it's always a data.frame, even if empty
-  if (!is.null(out) && nrow(out) > 0) {
-    out <- tibble::tibble(
-      No_data_available = character()
+safe_antibiogram <- function(df, antimicrobials = NULL, ...) {
+  out <- tryCatch({
+    # ensure antimicrobials are character if provided
+    if (!is.null(antimicrobials)) {
+      antimicrobials <- as.character(antimicrobials)
+    }
 
+    suppressWarnings(
+      antibiogram(df, antimicrobials = antimicrobials, ...)
     )
+  },
+  error = function(e) NULL
+  )
+
+  if (is.null(out) || nrow(out) == 0) {
+    return(tibble::tibble(
+      bacteria = character(),
+      ab       = character(),
+      n        = integer(),
+      R        = numeric(),
+      S        = numeric(),
+      I        = numeric()
+    ))
   }
+
   out
 }
