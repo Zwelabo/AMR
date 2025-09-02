@@ -1,4 +1,29 @@
 
+#IF THE DATASET IS PROVIDED IN LONG FORMAT
+cat('Checking if data reformatting is needed...\n')
+message('Checking if data reformatting is needed...')
+
+file_path <- file.path(amr_updates_dir,'long_format_amr_columns.xlsx')
+
+if (file.exists(file_path)) {
+
+  #read in the data
+  long_cols <- read.xlsx(file_path)# or read.csv, fread, etc.
+  long_cols$my_dataset[long_cols$man_vars=="Identification number"]
+  #reshape the data
+  amr <- amr %>% pivot_wider(id_cols = c(long_cols$my_dataset[long_cols$man_vars=="Identification number"],
+                                  long_cols$my_dataset[long_cols$man_vars=="Organism"],everything()),
+                      names_from = long_cols$my_dataset[long_cols$man_vars=="Antibiotics_column"],
+                      values_from = long_cols$my_dataset[long_cols$man_vars=="AST_results"])
+
+  cat("Data has been re-formatted..\n")
+  message("Data has been re-formatted")
+} else {
+  amr <- amr
+
+}
+
+
 ###call and rename stuff
 
 cols_to_update <- read_excel(paste0(amr_updates_dir,"/select_amr_variables.xlsx"))
@@ -40,19 +65,53 @@ get_inputs_and_prelim_cleanup <- function(){
 
   # Load AMR data sources ---------------------------------------------------
 
-   amr <- amr %>%
-    mutate( Specimen_date_new = if ("Date" %in% class(`Date of data entry`)) {
-        coalesce(`Specimen date`, `Date of data entry`)
-      } else {
-        `Specimen date`
-      }) %>%
-     dplyr::mutate(r_id=row_number()) %>%  # assign distinct r_ids
-    mutate(numeric_value = as.numeric(Specimen_date_new)) %>%
-    mutate(New_date_posixct = ifelse(is.na(numeric_value),
-                                     parse_date_time(Specimen_date_new, orders = date_parse_vec),
-                                     as.POSIXct(numeric_value * 24 * 3600, origin = excel_origin, tz = "UTC"))
-    ) %>%
-    mutate(specimen_date_cleaned = as.Date(as.POSIXct(New_date_posixct, origin = "1970-01-01", tz = "UTC")))
+    safe_as_posix <- function(x, ...) {
+     out <- tryCatch(as.POSIXct(x, ...), error = function(e) NA)
+     out
+   }
+
+    amr <- amr %>%
+     mutate(
+       # pick source
+       Specimen_date_new = if ("Date" %in% class(`Date of data entry`)) {
+         coalesce(`Specimen date`, `Date of data entry`)
+       } else {
+         `Specimen date`
+       },
+
+       # numeric probe
+       .num = suppressWarnings(as.numeric(Specimen_date_new)),
+
+       # smart parsing
+       .posix = dplyr::case_when(
+         inherits(Specimen_date_new, "Date")    ~ safe_as_posix(Specimen_date_new, tz = "UTC"),
+         inherits(Specimen_date_new, "POSIXt")  ~ safe_as_posix(Specimen_date_new, tz = "UTC"),
+
+         # numeric epochs
+         !is.na(.num) & .num > 1e12 ~ safe_as_posix(.num/1000, origin = "1970-01-01", tz = "UTC"), # ms
+         !is.na(.num) & .num > 1e9  ~ safe_as_posix(.num,      origin = "1970-01-01", tz = "UTC"), # sec
+
+         # Excel serial days
+         !is.na(.num) ~ safe_as_posix(.num * 86400, origin = excel_origin, tz = "UTC"),
+
+         # fallback to parsing strings
+         TRUE ~ tryCatch(
+           suppressWarnings(parse_date_time(as.character(Specimen_date_new),
+                                            orders = date_parse_vec, tz = "UTC")),
+           error = function(e) NA
+         )
+       ),
+
+       specimen_date_cleaned = as.Date(.posix),
+
+       # flag failures
+       parse_failed = is.na(.posix) & !is.na(Specimen_date_new),
+       parse_failed_value = ifelse(parse_failed, as.character(Specimen_date_new), NA_character_),
+
+       r_id = row_number()
+     ) %>%
+     select(-.num, -.posix)
+
 
 
    # Specify mandatory columns -----------------------------------------------
@@ -122,6 +181,20 @@ get_specimen_info <- function(df){
   return(lkp_specimens)
 
 }
+
+get_guideline_info <- function(df){
+  # get specimens info
+
+  ast_ref_vec <- c("r_id","AST guidelines")
+
+  lkp_ast_ref <-  df %>%
+
+    dplyr::select(any_of(ast_ref_vec))
+
+  return(lkp_ast_ref)
+
+}
+
 
 
 abx_vec_dict <- c(unique(readxl::read_excel(paste0('amr_resources/Antibiotic_Codes.xlsx'))$Code),
@@ -223,7 +296,9 @@ pivot_abx_results <- function(df){
 get_sir_interpr <- function(df){
   # Drugs with SIR interpretations already
 
-  famr_long_sir <- df %>%
+
+
+  famr_long_sir <- df %>%left_join(lkp_ast_ref, by='r_id') %>%
 
     mutate(int_id=row_number()) %>%
 
@@ -233,11 +308,13 @@ get_sir_interpr <- function(df){
 
            # Use Gilbert's logic to determine if DISK or MIC
 
-           guideline=ifelse(grepl('_N', drug_code), 'CLSI',
+           guideline_inp=ifelse(grepl('_N', drug_code), 'CLSI',
 
                             ifelse(grepl('_E', drug_code), 'EUCAST', 'CLSI')),
 
            interpreted_res='',                    #to hold results for the next part
+           guideline=`AST guidelines`,
+           guideline= ifelse(is.na(guideline), guideline_inp, guideline),
 
            intrinsic_res_status=''
 
@@ -261,7 +338,7 @@ get_sir_interpr <- function(df){
 get_con_interp <- function(df){
   # Drugs with breakpoints (MIC or DISK)
 
-  famr_long_con <- df %>%
+  famr_long_con <- df %>%left_join(lkp_ast_ref, by='r_id') %>%
 
     mutate(int_id=row_number()) %>%
 
@@ -271,15 +348,37 @@ get_con_interp <- function(df){
 
     mutate(test_type=ifelse(grepl('_NM|_EM', drug_code), 'mic','disk'),
 
-           guideline=ifelse(grepl('_N', drug_code), 'CLSI',
+           guideline_inp=ifelse(grepl('_N', drug_code), 'CLSI',
 
-                            ifelse(grepl('_E', drug_code), 'EUCAST', 'CLSI')),
+                                ifelse(grepl('_E', drug_code), 'EUCAST', 'CLSI')),
 
            interpreted_res='',                    #to hold results for the next part
+           guideline=`AST guidelines`,
+           guideline= ifelse(is.na(guideline), guideline_inp, guideline),
 
            intrinsic_res_status=''
 
     )
 
   return(famr_long_con)
+}
+
+# Safe antibiogram wrapper
+safe_antibiogram <- function(df, ...) {
+  out <- tryCatch(
+    antibiogram(df, ...),
+    error = function(e) NULL
+  )
+  # ensure it's always a data.frame, even if empty
+  if (is.null(out) || nrow(out) == 0) {
+    out <- tibble::tibble(
+      bacteria = character(),
+      ab       = character(),
+      n        = integer(),
+      R        = numeric(),
+      I        = numeric(),
+      S        = numeric()
+    )
+  }
+  out
 }

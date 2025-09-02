@@ -35,6 +35,8 @@ lkp_facility <- get_facilities_data(df=amr)
 
 lkp_specimens <- get_specimen_info(df=amr)
 
+lkp_ast_ref <- get_guideline_info(amr)
+
 amr_res <- get_test_results(df=amr)
 
 famr_long <- pivot_abx_results(df=amr_res)
@@ -112,7 +114,9 @@ an_df <- sir_outcomes_df_wide %>%
          Age_conv=as.numeric(Age_conv),
          Age_g=as.character(age_groups(Age_conv, split_at = c(1,5,20,50,65))),
          Age_g=ifelse(Age_g=='0', '<1',Age_g),
-         Age_g=factor(Age_g, levels=c('<1','1-4','5-19', '20-49','50-64','65+')))
+         Age_g=factor(Age_g, levels=c('<1','1-4','5-19', '20-49','50-64','65+')),
+         Sex =str_to_title(Sex),
+         specimen_type=str_to_title(specimen_type))
 
 
 
@@ -174,12 +178,12 @@ prep_for_antibiogram_mac <- function(df) {
 an_df <- prep_for_antibiogram_mac(an_df)
 
 abg_df <- an_df %>%
-
-  #filter(mo_organism==org_name) %>%
-
   mutate_if(is_sir_eligible, as.sir) %>%
+  mutate(bacteria = as.mo(bacteria))   # ensure correct class
 
-  antibiogram()
+# run antibiogram
+abg_df <- safe_antibiogram(abg_df, col_mo = "bacteria", minimum = 30)
+
 
 # Creating a workbook and worksheet
 wb <- createWorkbook()

@@ -28,12 +28,19 @@ choices1 <- sort(c(names(amr),'not available'))  # Use your real variable
 
 # Define initial df
 initial_df <- data.frame(
-  man_vars = c('Specimen date', 'Date of data entry', 'Specimen type', "Organism", 'Age',
-               'Sex', "Identification number"),
-  my_dataset = factor(rep('please select', 7), levels = choices1),
- # enter_country_name_or_code='',
+  man_vars = c('Specimen date', 'Date of data entry', 'Specimen type', "Organism", 'Age','AST guidelines',
+               'Sex', "Identification number", "Laboratory Name", "Patient Department"),
+  my_dataset = factor(rep('please select', 10), levels = choices1),
   stringsAsFactors = FALSE
 )
+
+#long_df parameters
+long_df_cols <- data.frame(
+  man_vars = c("Antibiotics_column", "AST_results","Identification number", "Organism", 'Specimen date'),
+  my_dataset = factor(rep('please select', 5), levels = choices1),
+   stringsAsFactors = FALSE
+)
+
 
 # Match column classes of df2 to df1 and allow missing columns
 match_col_classes <- function(df1, df2) {

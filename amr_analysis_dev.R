@@ -8,7 +8,7 @@ source("amr_scripts/f1.R")
 ui <- fluidPage(
   theme = shinytheme("cerulean"),
 
-  titlePanel("AMR Data Analysis - MAAP2"),
+  titlePanel("AMR Data Analysis - MAAP"),
 
   tabsetPanel(
     id = "steps",
@@ -31,6 +31,22 @@ ui <- fluidPage(
              helpText(paste0("Save in ", amr_updates_dir,"/")),
 
              br(),br(), br(),
+             checkboxInput("data_format_long", "My dataset have antibiotics in one column"),
+             #br(),
+             helpText(paste0("Leave blank if antibiotics form multiple columns in the dataset")),
+             #checkboxInput("data_format_wide", "My dataset DO NOT have antibiotics in one column"),
+
+             conditionalPanel(
+               condition = "input.data_format_long == true",
+               rHandsontableOutput("table_2"),
+               downloadButton("download_2", "Save Parameters"),
+               helpText(paste0("Save in ", amr_updates_dir,"/"))
+             ),
+             br(),
+
+
+             br(),br(), br(),
+
              actionButton("run_script_1", "Begin analysis"),
              br(),br(), br(),
              verbatimTextOutput("console_1"),
@@ -127,7 +143,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # Step datasets (initially NULL except step1)
   step1_data <- reactiveVal(initial_df)
-  step2_data <- reactiveVal(NULL)
+  step2_data <- reactiveVal(long_df_cols)
   step3_data <- reactiveVal(NULL)
   step4_data <- reactiveVal(NULL)
   step5_data <- reactiveVal(NULL)
@@ -175,6 +191,32 @@ server <- function(input, output, session) {
   output$console_1 <- renderText({ step_logs[[1]]() })
   output$download_1 <- downloadHandler(filename = "select_amr_variables.xlsx",
                                        content = function(file) writexl::write_xlsx(step1_data(), file))
+
+  observeEvent(input$data_format_long, {
+    if (isTRUE(input$data_format_long)) {
+      output$table_2 <- renderRHandsontable({
+        df <- step2_data()
+        req(df)
+        rhandsontable(df) %>%
+          hot_col("my_dataset", type = "dropdown", source = choices1, width = 200) %>%
+          hot_col("man_vars", readOnly = TRUE, width = 200)
+      })
+
+    } else {
+      output$table_2 <- renderRHandsontable(NULL)  # clear when unchecked
+    }
+      })
+
+  # Capture user edits from rhandsontable
+  observe({
+    if (!is.null(input$table_2)) {
+      step2_data(hot_to_r(input$table_2))
+    }
+  })
+
+  output$download_2 <- downloadHandler(filename = "long_format_amr_columns.xlsx",
+                                       content = function(file) writexl::write_xlsx(step2_data(), file))
+
 
   # # ---- Step 2 lazy-load ----
   # observeEvent(input$next_1, {
