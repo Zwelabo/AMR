@@ -25,6 +25,13 @@ ui <- fluidPage(
              verbatimTextOutput("register_msg"),
              br(),
 
+             selectInput("os_type", "Select your Operating System:",
+                         choices = c("Windows", "Mac", "Linux", "Other")),
+             br(),
+             textOutput("os_msg"),
+
+             br(),
+
              rHandsontableOutput("table_1"),
              br(),
              downloadButton("download_1", "Save Data"),
@@ -176,6 +183,18 @@ server <- function(input, output, session) {
      })
   })
 
+  #operatin system for antibiograms
+  observeEvent(input$os_type, {
+    req(input$os_type)  # ensure user has selected something
+
+    # Save to global environment
+    assign("user_os", input$os_type, envir = .GlobalEnv)
+
+    # Feedback to user
+    output$os_msg <- renderText({
+      paste0("✅ Operating System Selected: ", input$os_type)
+    })
+  })
 
   observe({ req(input$table_1); step1_data(hot_to_r(input$table_1)) })
   observeEvent(input$run_script_1, {
