@@ -5,65 +5,59 @@
 
 # Function 1: Convert breakpoints to SIR
 
-convert2sir_fun <- function(df){
-
-  if (is.null(df) || nrow(df) == 0) {    #if there are no sir reported or no zones/mics
-    x <- NULL
-  } else{
-
-  res_list <- list()
+convert2sir_fun <- function(df, n_cores = detectCores() - 1) {
+  if (is.null(df) || nrow(df) == 0) {
+    return(NULL)
+  }
 
   id_vec <- df %>% pull(int_id)
 
-  for (i in id_vec){
+  # Set up cluster
+  cl <- makeCluster(n_cores)
+  clusterEvalQ(cl, {
+    library(dplyr)
+    library(AMR)
+  })
+  clusterExport(cl, c("df"), envir = environment())
 
-    res_list[[i]] <- df %>%
-      mutate() %>%
-      dplyr::filter(int_id==i)
+  res_list <- parLapply(cl, id_vec, function(i) {
+    sub_df <- df %>% filter(int_id == i)
 
-    id=res_list[[i]][["int_id"]]
-    bacteria=res_list[[i]][["bacteria"]]
-    drug_code=as.ab(res_list[[i]][["drug_code"]])
-    test=res_list[[i]][["test_type"]]
-    guideline=res_list[[i]][["guideline"]]
-    value= suppressWarnings(as.numeric(res_list[[i]][["vals"]]))
+    id <- sub_df[["int_id"]]
+    bacteria <- sub_df[["bacteria"]]
+    drug_code <- as.ab(sub_df[["drug_code"]])
+    test <- sub_df[["test_type"]]
+    guideline <- sub_df[["guideline"]]
+    value <- suppressWarnings(as.numeric(sub_df[["vals"]]))
 
-
-
-    if(test == 'mic'){
-      if(is.na(value)){
-        value=res_list[[i]][["vals"]]
-        interpreted <- as.character(as.sir(value, mo=paste0(bacteria), guideline = paste0(guideline), ab=paste0(drug_code))) #the SIR
-      }else{
-        interpreted <- as.character(as.sir(as.mic(value), mo=paste0(bacteria), guideline = paste0(guideline), ab=paste0(drug_code)))
+    if (test == "mic") {
+      if (is.na(value)) {
+        value <- sub_df[["vals"]]
+        interpreted <- as.character(as.sir(value, mo = bacteria, guideline = guideline, ab = drug_code))
+      } else {
+        interpreted <- as.character(as.sir(as.mic(value), mo = bacteria, guideline = guideline, ab = drug_code))
       }
-    }else{
-      if(is.na(value)){
-        value=res_list[[i]][["vals"]]
-        interpreted <- as.sir(value, mo=paste0(bacteria), guideline = paste0(guideline), ab=paste0(drug_code))
-      }else{
-        interpreted <- as.sir(as.disk(value), mo=paste0(bacteria), guideline = paste0(guideline), ab=paste0(drug_code))
+    } else {
+      if (is.na(value)) {
+        value <- sub_df[["vals"]]
+        interpreted <- as.sir(value, mo = bacteria, guideline = guideline, ab = drug_code)
+      } else {
+        interpreted <- as.sir(as.disk(value), mo = bacteria, guideline = guideline, ab = drug_code)
       }
     }
 
+    intrinsic_status <- as.character(mo_is_intrinsic_resistant(bacteria, ab = drug_code))
 
-    intrinsic_status <- as.character(mo_is_intrinsic_resistant( paste0(bacteria),ab=paste0(drug_code)))
+    sub_df[["interpreted_res"]] <- interpreted
+    sub_df[["intrinsic_res_status"]] <- intrinsic_status
 
-    #update the df
-    #res_list[[i]][["drug_code"]]=paste0(drug_code) #keep unconformed drug for join back to demographics
-    res_list[[i]][["interpreted_res"]]=paste0(interpreted)
-    res_list[[i]][["intrinsic_res_status"]]=paste0(intrinsic_status)
+    sub_df
+  })
 
-  }
+  stopCluster(cl)
 
-
-  x<-dplyr::bind_rows(res_list)
-
-  return(x)
-
+  dplyr::bind_rows(res_list)
 }
-}
-
 
 #------------------------------------------------------------------------------------------------
 
