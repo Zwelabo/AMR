@@ -310,7 +310,7 @@ server <- function(input, output, session) {
     df <- step5_data()
     req(df)
     rhandsontable(df) %>%
-      hot_col("Class", type = "dropdown", source = sort(antibiotic_classes_amc), width = 200) %>%
+      hot_col("Class", type = "dropdown", source = c(' ',sort(antibiotic_classes_amc)), width = 200) %>%
       hot_col("Category", type = "dropdown", source = c(' ','Access','Watch', 'Reserve','Uncategorized'), width = 150) %>%
       hot_col("antibiotic_names", readOnly = TRUE, width = 300)  # Optional: Make label column readonly
   })

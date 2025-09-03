@@ -31,8 +31,13 @@ writexl::write_xlsx(ddd_ref_update, 'amc_resources/ab_molecules_amc.xlsx')
 #incorporating the added ddd info
 amc_dataset_comb2 <- amc_dataset_comb_r %>%  filter(name_route %in% ddd_ref$name_route)
 
-writexl::write_xlsx(amc_dataset_comb2, paste0(amc_updates_dir,'/unused_amc_data.xlsx'))
+unused_records <- subset(amc_r1, !(amc_r1$uid %in%  c(unique(amc_dataset1$uid),unique(amc_dataset_inhibitors$uid),
+                                  unique(amc_dataset_comb1$uid))))
+
+
+
+writexl::write_xlsx(unused_records, paste0(amc_updates_dir,'/unused_amc_data.xlsx'))
 #after editing DDDs, use this; amc_dataset_comb2
 
-cat(paste("Done... uncleaned data stored", (length(unique(amc_dataset_comb2$uid))), 'records\n'))
-message(paste("Done... uncleaned data stored", (length(unique(amc_dataset_comb2$uid))), 'records'))
+cat(paste("Done... uncleaned data stored", (length(unique(unused_records$uid))), 'records\n'))
+message(paste("Done... uncleaned data stored", (length(unique(unused_records$uid))), 'records'))

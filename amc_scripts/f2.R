@@ -18,14 +18,14 @@ if(!dir.exists(amc_dir)){dir.create(amc_dir, recursive = T)}
 cols_to_update <- read_excel(paste0(amc_updates_dir,"/select_amc_variables.xlsx"))
 
 # Perform renaming
-names(amc_raw)[names(amc_raw) %in% cols_to_update$my_dataset] <- cols_to_update$man_vars[match(names(amc_raw)[names(amc_raw) %in% cols_to_update$my_dataset], cols_to_update$my_dataset)]
+names(amc_raw)[names(amc_raw) %in% cols_to_update$Corresponding_variables] <- cols_to_update$Required_variables[match(names(amc_raw)[names(amc_raw) %in% cols_to_update$Corresponding_variables], cols_to_update$Corresponding_variables)]
 
 #Country code
 #cntry=cols_to_update$Country[1]
 
 
 #creating blank space holders for the unavailable cols
-unavailable_cols=cols_to_update$man_vars[cols_to_update$my_dataset=='not available']
+unavailable_cols=cols_to_update$Required_variables[cols_to_update$Corresponding_variables=='not available']
 
 amc_raw[unavailable_cols]=NA
 
@@ -118,6 +118,8 @@ atcs_cleaned <- read_excel('amc_resources/ab_molecules.xlsx') %>%
 antibiotics_mol_dict <- trimws(tolower(atcs_cleaned$original_entry))
 
 
+
+
 #load the dataset
 
 #create the results directory
@@ -129,22 +131,46 @@ if(!dir.exists(amc_dir)){dir.create(amc_dir, recursive = T)}
 
 #importing the test dataset (focus is on non-combinational drugs)
 amc_test <- amc_raw %>%
-  tidyr::extract("product", c("product", "strength"), "(\\D*)(\\d.*)") %>%   #separating product names from strength
-  tidyr::extract("pack_size", c("pack_size_unit", "pack_size"), "(\\D*)(\\d.*)") %>%   #separating product names from strength
-  mutate(reported_route=route,
+  tidyr::extract("product", c("product1", "strength1"), "(\\D*)(\\d.*)", remove = F) %>%   #separating product names from strength
+  tidyr::extract("pack_size", c("pack_size_unit1", "pack_size1"), "(\\D*)(\\d.*)") %>%   #separating product names from strength
+  mutate(product = if_else(is.na(product1), product, product1),
+
+         reported_route=route,
          route=ifelse(str_detect(tolower(route), 'oral'),'o',           #administration routes
                       ifelse(str_detect( tolower(route), 'parenteral'),'p',
                              tolower(route))),
+         #If liquid formulation parameters are provided, paste the columns
+         strength=ifelse(!is.na(volume_liquid_drugs), volume_liquid_drugs, strength),
+         strength_unit=ifelse(!is.na(strength_liquid_drugs), strength_liquid_drugs, strength_unit),
+         #populating strength, packsize and units if not provided
+         strength=ifelse(is.na(strength), strength1, strength),
+
          # name_route=paste0(trimws(product), '_', route),
          strength_val=str_split_i(strength , "([A-Za-z]+)",1),   #strength integer
+
          strength_unit_r=substr(strength , nchar(strength_val)+1, 50), #strength unit
-         strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+         strength_unit1=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+
+         strength_unit=ifelse(is.na(strength_unit), strength_unit1, strength_unit),
+
+         #numerator for liquids
+         strength_num_factor=str_split_i(strength_unit , "(/)",1),
+         strength_num_factor_val=str_split_i(strength_num_factor , "([A-Za-z]+)",1),
+         strength_num_factor_val=ifelse((strength_num_factor_val==""),1,strength_num_factor_val),
+         strength_val=as.numeric(strength_val)*as.numeric(strength_num_factor_val),
+         strength_unit=str_split_i((substr(strength_num_factor , nchar(strength_num_factor_val)+1, 50)),' ',1), #strength unit
+         #div factor
          strength_div_factor=str_split_i(strength_unit , "(/)",2),
          strength_div_factor_val=str_split_i(strength_div_factor , "([A-Za-z]+)",1),
+
+
          strength_div_factor_val=ifelse(is.na(strength_div_factor_val),1 , strength_div_factor_val),
          strength_div_factor_unit=substr(strength_div_factor , nchar(strength_div_factor_val)+1, 50),   #strength unit
-         pack_size_val=str_split_i(pack_size , "([A-Za-z]+)",1),   #packsize integer)
-         pack_unit=substr(pack_size , nchar(pack_size_val)+1, 50),
+         pack_size_val=str_split_i(pack_size1 , "([A-Za-z]+)",1),   #packsize integer)
+
+         pack_unit1=substr(pack_size_unit1 , nchar(pack_size_val)+1, 50),
+
+         pack_unit=ifelse(is.na(pack_size_unit), pack_unit1, pack_size_unit),
          id=1:nrow(.))
 
 

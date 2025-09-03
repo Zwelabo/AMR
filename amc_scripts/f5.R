@@ -15,9 +15,10 @@ amc1 <- amc_dataset1 %>% left_join(ddd_ref %>%
 
          total=quantity*as.numeric(strength_val)*as.numeric(pack_size_val)/as.numeric(strength_div_factor_val),
          total_g=ifelse(strength_unit=='mg', total/1000,
+                        ifelse(strength_unit=='mcg', total/1000000,
                         ifelse(strength_unit=='ml', total/1000,
                                ifelse(strength_unit=='g', total/1,
-                                      NA))),
+                                      NA)))),
          ddd_equivalent=total_g/as.numeric(DDD),
          year=as.numeric(format(date,'%Y')),
          y_month=format(as.Date(date), "%Y-%m"),
@@ -30,7 +31,9 @@ amc2 <- amc_dataset_inhibitors %>% left_join(ddd_ref %>%
                                                dplyr::select(-uid,-antibiotic_names, -antibiotic_molecules, -antibiotic_names_orig_order) %>%
                                                distinct(name_route, .keep_all=T), by='name_route') %>%
   # filter(!is.na(`ATC code`)) %>%
-  mutate(strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+  mutate(#strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+    strength_unit=str_split_i(strength_num_factor,' ',1), #strength unit
+
          strength_div_factor1=str_split_i(strength_unit_r , "(/)",2),
          strength_div_factor_val1=str_split_i(strength_div_factor1 , "([A-Za-z]+)",1),
          strength_div_factor_val=ifelse(!is.na(strength_div_factor_val1), strength_div_factor_val1, strength_div_factor_val),
@@ -41,9 +44,10 @@ amc2 <- amc_dataset_inhibitors %>% left_join(ddd_ref %>%
          strength_val1=str_split_i(strength_val1, '_',1),
          total=quantity*as.numeric(strength_val1)*as.numeric(pack_size_val)/as.numeric(strength_div_factor_val),
          total_g=ifelse(strength_unit=='mg', total/1000,
-                        ifelse(strength_unit=='ml', total/1000,
-                               ifelse(strength_unit=='g', total/1,
-                                      NA))),
+                        ifelse(strength_unit=='mcg', total/1000000,
+                               ifelse(strength_unit=='ml', total/1000,
+                                      ifelse(strength_unit=='g', total/1,
+                                             NA)))),
          ddd_equivalent=total_g/as.numeric(DDD),
          year=as.numeric(format(date,'%Y')),
          y_month=format(as.Date(date), "%Y-%m"),
@@ -56,7 +60,8 @@ amc3_1 <- amc_dataset_comb1 %>% filter(antibiotic_order==1) %>%
   left_join(ddd_ref %>%
               dplyr::select(-uid,-antibiotic_names, -antibiotic_molecules, -antibiotic_names_orig_order) %>%
               distinct(name_route, .keep_all=T), by='name_route') %>%
-  mutate(strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+  mutate(#strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+    strength_unit=str_split_i(strength_num_factor,' ',1), #strength unit
          strength_div_factor1=str_split_i(strength_unit_r , "(/)",2),
          strength_div_factor_val1=str_split_i(strength_div_factor1 , "([A-Za-z]+)",1),
          strength_div_factor_val=ifelse(!is.na(strength_div_factor_val1), strength_div_factor_val1, strength_div_factor_val),
@@ -64,14 +69,21 @@ amc3_1 <- amc_dataset_comb1 %>% filter(antibiotic_order==1) %>%
          strength_unit=tolower(strength_unit),
          strength_unit=gsub('[-+_/,& )(;]','_',trimws(strength_unit)),
          strength_unit=str_split_i(strength_unit, '_',1),
+    strength_unit=if_else(
+      str_detect(strength_unit, "[0-9]+"),
+      str_split_i(strength_unit, "([0-9]+)", 2),
+      strength_unit
+    ), #strength unit
+
 
          strength_val1=gsub('[-+_/,& )(;]','_',trimws(strength_val)),
          strength_val1=str_split_i(strength_val1, '_',1),
          total=quantity*as.numeric(strength_val1)*as.numeric(pack_size_val)/as.numeric(strength_div_factor_val),
          total_g=ifelse(strength_unit=='mg', total/1000,
-                        ifelse(strength_unit=='ml', total/1000,
-                               ifelse(strength_unit=='g', total/1,
-                                      NA))),
+                        ifelse(strength_unit=='mcg', total/1000000,
+                               ifelse(strength_unit=='ml', total/1000,
+                                      ifelse(strength_unit=='g', total/1,
+                                             NA)))),
          ddd_equivalent=total_g/as.numeric(DDD),
          year=as.numeric(format(date,'%Y')),
          y_month=format(as.Date(date), "%Y-%m"),
@@ -83,7 +95,8 @@ amc3_2 <- amc_dataset_comb1 %>% filter(antibiotic_order==2) %>%
   left_join(ddd_ref %>%
               dplyr::select(-uid,-antibiotic_names, -antibiotic_molecules, -antibiotic_names_orig_order) %>%
               distinct(name_route, .keep_all=T), by='name_route') %>%
-  mutate(strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+  mutate(#strength_unit=str_split_i(strength_unit_r , "(/)", 1), #strength unit
+         strength_unit=str_split_i(strength_num_factor,' ',1), #strength unit
          strength_div_factor1=str_split_i(strength_unit_r , "(/)",2),
          strength_div_factor_val1=str_split_i(strength_div_factor1 , "([A-Za-z]+)",1),
          strength_div_factor_val=ifelse(!is.na(strength_div_factor_val1), strength_div_factor_val1, strength_div_factor_val),
@@ -96,9 +109,10 @@ amc3_2 <- amc_dataset_comb1 %>% filter(antibiotic_order==2) %>%
          strength_val1=str_split_i(strength_val1, '_',2),
          total=quantity*as.numeric(strength_val1)*as.numeric(pack_size_val)/as.numeric(strength_div_factor_val),
          total_g=ifelse(strength_unit=='mg', total/1000,
-                        ifelse(strength_unit=='ml', total/1000,
-                               ifelse(strength_unit=='g', total/1,
-                                      NA))),
+                        ifelse(strength_unit=='mcg', total/1000000,
+                               ifelse(strength_unit=='ml', total/1000,
+                                      ifelse(strength_unit=='g', total/1,
+                                             NA)))),
          ddd_equivalent=total_g/as.numeric(DDD),
          year=as.numeric(format(date,'%Y')),
          y_month=format(as.Date(date), "%Y-%m"),
@@ -167,7 +181,7 @@ amc_cats_molecule <- Reduce( rbind, list(molecule_temp %>% filter(ddd_dist >= 1)
 plt_molecule_dist <- ggplot(amc_cats_molecule,# %>% filter(year==y),
                             aes(x=as.factor(year), y=ddd_dist, fill=molecule))+
   geom_bar(stat = 'identity', width = 0.5)+
-  scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = my_colors) +
   labs(x='Year', y='DDD Distribution (%)')+
   geom_label_repel(aes(label=ddd_dist, group=molecule),
                    position = position_stack(vjust = 0.5),
@@ -186,7 +200,7 @@ plt_molecule_tot <- ggplot(amc_cats_molecule#%>% filter(year==y)
                            , aes(x=as.factor(year), y=tot_did, fill=molecule))+
   geom_bar(stat = 'identity',  width=.8, position = position_dodge())+
   labs(x='', y='DDD/1000 Inhabitants/day')+
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_manual(values = my_colors) +
   theme_classic()+
   theme(legend.title = element_blank())
 
@@ -198,7 +212,7 @@ plt_molecule_sin <- ggplot(amc_cats_molecule#%>% filter(year==y)
                            , aes(x=molecule, y=tot_did, fill=as.factor(year)))+
   geom_bar(stat = 'identity',  width=.8, position = position_dodge())+
   labs(x='', y='DDD/1000 Inhabitants/day')+
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_manual(values = my_colors) +
   theme_classic()+
   theme(axis.text.x = element_text(angle = 60, hjust = 1,vjust=1),legend.title = element_blank())
 
@@ -252,7 +266,7 @@ amc_cats_s_route <- Reduce( rbind, list(s_route_temp %>% filter(ddd_dist >= 1),
 plt_s_route_dist <- ggplot(amc_cats_s_route #%>% filter(year==y),
                            ,aes(x=as.factor(year), y=ddd_dist, fill=route))+
   geom_bar(stat = 'identity', width = 0.5)+
-  scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = my_colors) +
   labs(x='Year', y='DDD Distribution (%)')+
   geom_label_repel(aes(label=ddd_dist, group=route),
                    position = position_stack(vjust = 0.5),
@@ -271,7 +285,7 @@ plt_s_route_tot <- ggplot(amc_cats_s_route#%>% filter(year==y)
                           , aes(x=as.factor(year), y=tot_did, fill=route))+
   geom_bar(stat = 'identity',  width=.8, position = position_dodge())+
   labs(x='', y='DDD/1000 Inhabitants/day')+
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_manual(values = my_colors) +
   theme_classic()+
   theme(legend.title = element_blank())
 ggsave(paste0(amc_dir_route,'/','AMC_s_routes_DID.png'),plt_s_route_tot, width=8, height=8, units="in", dpi=300)

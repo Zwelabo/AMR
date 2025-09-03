@@ -66,11 +66,17 @@ amc_cats_aware <- amc %>% left_join(amc_class_updates, by=('antibiotic_names')) 
 
 #for (y in unique(amc_cats_class$year)) {
 
+#colors
+my_colors <- c(
+  brewer.pal(9, "Set1"),
+  brewer.pal(8, "Set2"),
+  brewer.pal(8, "Dark2")
+)
 
 plt_class_dist <- ggplot(amc_cats_class #%>% filter(year==y)
                          , aes(x=as.factor(year), y=ddd_dist, fill=class))+
   geom_bar(stat = 'identity', width = 0.5)+
-  scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = my_colors) +
   labs(x='Year', y='DDD Distribution (%)')+
   geom_label_repel(aes(label=ddd_dist, group=class),
                    position = position_stack(vjust = 0.5),
@@ -89,7 +95,7 @@ plt_class_tot <- ggplot(amc_cats_class#%>% filter(year==y)
                         , aes(x=as.factor(year), y=tot_did, fill=class))+
   geom_bar(stat = 'identity',  width=.8, position = position_dodge())+
   labs(x='', y='DDD/1000 Inhabitants/day')+
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_manual(values = my_colors) +
   theme_classic()+
   theme(legend.title = element_blank())
 
@@ -100,7 +106,7 @@ plt_class_sin <- ggplot(amc_cats_class#%>% filter(year==y)
                            , aes(x=class, y=tot_did, fill=as.factor(year)))+
   geom_bar(stat = 'identity',  width=.8, position = position_dodge())+
   labs(x='', y='DDD/1000 Inhabitants/day')+
-  scale_fill_brewer(palette = "Set1")+
+  scale_fill_manual(values = my_colors) +
   theme_classic()+
   theme(axis.text.x = element_text(angle = 60, hjust = 1,vjust=1),legend.title = element_blank())
 
@@ -112,7 +118,7 @@ ggsave(paste0(amc_dir_class,'/','AMC_single_classes.png'),plt_class_sin, width=8
 plt_aware_dist <- ggplot(amc_cats_aware %>% drop_na(aware_cats)#%>% filter(year==y)
                          , aes(x=as.factor(year), y=dist, fill=aware_cats))+
   geom_bar(stat = 'identity', width = 0.5)+
-  scale_fill_brewer(palette = "Set1") +
+  scale_fill_manual(values = my_colors) +
   labs(x='Year', y='DDD Distribution (%)')+
   geom_label_repel(aes(label=dist, group=aware_cats),
                    position = position_stack(vjust = 0.5),

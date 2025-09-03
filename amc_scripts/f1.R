@@ -28,10 +28,12 @@ choices1 <- c(names(amc_raw),'not available')  # Use your real variable
 
 
 #prelim required columns
-cols <- c("region", "product", "strength", "pack_size", "quantity", "date", "route")
+cols <- c("region", "product", "strength", "strength_unit",
+          "strength_liquid_drugs", "volume_liquid_drugs",
+          "pack_size","pack_size_unit", "quantity", "date", "route")
 
 empty_amc_df <- data.frame(Required_variables=cols,
-                           Corresponding_variables=c(rep('',7)))
+                           Corresponding_variables=c(rep('',11)))
 
 
 # Match column classes of df2 to df1 and allow missing columns
