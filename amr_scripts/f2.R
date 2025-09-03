@@ -48,7 +48,10 @@ famr_long_con <- get_con_interp(df=famr_long)
 
 # Convert breakpoints to SIR ----------------------------------------------
 message('Converting breakpoints to SIR ....')
-cat('Beginning analysis here ....\n')
+cat('Converting breakpoints to SIR ....\n')
+
+message('Please wait for this step to complete....')
+cat('Please wait for this step to complete....\n')
 
 
 
