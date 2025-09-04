@@ -318,7 +318,8 @@ get_sir_interpr <- function(df){
 
            intrinsic_res_status=''
 
-    )
+    )%>%
+    filter(!is.na(bacteria))
 
   if(nrow(famr_long_sir) > 0){
 
@@ -358,7 +359,8 @@ get_con_interp <- function(df){
 
            intrinsic_res_status=''
 
-    )
+    ) %>%
+    filter(!is.na(bacteria))
 
   return(famr_long_con)
 }

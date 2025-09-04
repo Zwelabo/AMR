@@ -6,6 +6,7 @@ source("amr_scripts/f1.R")
 
 
 ui <- fluidPage(
+
   theme = shinytheme("cerulean"),
 
   titlePanel("AMR Data Analysis - MAAP"),
@@ -15,54 +16,69 @@ ui <- fluidPage(
 
     # Step 1
     tabPanel("Step 1",
-             h3("Select AMR Variables"),
+             div(
+               style = "position: relative; min-height: 600px;",  # container with enough space
 
-             textInput("country_name", "Enter Country Name"),
-             #numericInput("population", "Enter Population", value = NA, min = 1),
-             br(),
-             actionButton("reg_1", "Register Country"),
-             br(), br(),
-             verbatimTextOutput("register_msg"),
-             br(),
-
-             selectInput("os_type", "Select your Operating System:",
-                         choices = c("Windows", "Mac", "Linux", "Other")),
-             br(),
-             textOutput("os_msg"),
-
-             br(),
-
-             rHandsontableOutput("table_1"),
-             br(),
-             downloadButton("download_1", "Save Data"),
-             helpText(paste0("Save in ", amr_updates_dir,"/")),
-
-             br(),br(), br(),
-             checkboxInput("data_format_long", "My dataset have antibiotics in one column"),
-             #br(),
-             helpText(paste0("Leave blank if antibiotics form multiple columns in the dataset")),
-             #checkboxInput("data_format_wide", "My dataset DO NOT have antibiotics in one column"),
-
-             conditionalPanel(
-               condition = "input.data_format_long == true",
-               rHandsontableOutput("table_2"),
-               downloadButton("download_2", "Save Parameters"),
-               helpText(paste0("Save in ", amr_updates_dir,"/"))
-             ),
-             br(),
+               # 🔹 faint logo
+               tags$img(
+                 src = "logo.jpg",   # put logo.png in your www/ folder
+                 style = "
+            opacity: 0.07;            /* faint transparency */
+            position: absolute;
+            top: 3%; left: 45%;     /* adjust placement */
+            width: 500px;            /* adjust size */
+            z-index: 0;
+          "
+               ),
 
 
-             br(),br(), br(),
+               div(
+                 style = "position: relative; z-index: 1;",  # ensure content is above the logo
 
-             actionButton("run_script_1", "Begin analysis"),
-             br(),br(), br(),
-             verbatimTextOutput("console_1"),
+                 h3("Select AMR Variables"),
 
-             checkboxInput("completed_1", "I have completed this step"),
-             br()
-             #,
-      #       actionButton("next_1", "Next")
-    )#,
+                 textInput("country_name", "Enter Country Name"),
+                 br(),
+                 actionButton("reg_1", "Register Country"),
+                 br(), br(),
+                 verbatimTextOutput("register_msg"),
+                 br(),
+
+                 selectInput("os_type", "Select your Operating System:",
+                             choices = c("Windows", "Mac", "Linux", "Other")),
+                 br(),
+                 textOutput("os_msg"),
+
+                 br(),
+
+                 rHandsontableOutput("table_1"),
+                 br(),
+                 downloadButton("download_1", "Save Data"),
+                 helpText(paste0("Save in ", amr_updates_dir,"/")),
+
+                 br(),br(), br(),
+                 checkboxInput("data_format_long", "My dataset have antibiotics in one column"),
+                 helpText(paste0("Leave blank if antibiotics form multiple columns in the dataset")),
+
+                 conditionalPanel(
+                   condition = "input.data_format_long == true",
+                   rHandsontableOutput("table_2"),
+                   downloadButton("download_2", "Save Parameters"),
+                   helpText(paste0("Save in ", amr_updates_dir,"/"))
+                 ),
+                 br(), br(), br(),
+
+                 actionButton("run_script_1", "Begin analysis"),
+                 br(), br(), br(),
+                 verbatimTextOutput("console_1"),
+
+                 checkboxInput("completed_1", "I have completed this step"),
+                 br()
+               )
+             )
+    )
+
+#,
 
     # # Step 2
     # tabPanel("Step 2",
